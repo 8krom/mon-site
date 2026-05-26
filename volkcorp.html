@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volkcorp</title>
+    <link rel="stylesheet" href="volkcorp.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+
+    <div id="intro-screen">
+    <img src="images/logo_volkcorp.png" id="intro-logo">
+    </div>
+
+    <div id="heure-volkcorp"></div>
+
+    <div id="audio-controls">
+    <button id="audio-toggle">🔊</button>
+    <input type="range" id="audio-volume" min="0" max="100" value="30">
+    </div>
+
+    <div id="scene">
+        <div id="cercle"></div>
+        <img src="images/logo_volkcorp.png" id="logo-volkcorp">
+        <div id="bulles"></div>
+    </div>
+
+    <footer id="footer-volkcorp">
+        <p>VOLKCORP INDUSTRIES © 2026 — ALL RIGHTS RESERVED</p>
+        <p>CLASSIFIED DOCUMENT — INTERNAL USE ONLY</p>
+        <p>VKC-8K-AUTH-2026 · BASED IN BORDEAUX · FROM THE SWAMP</p>
+    </footer>
+
+    <div class="fenetre" id="fenetre-partage">
+    <div class="fenetre-barre">
+        <span class="fenetre-titre">Partage — Volkcorp</span>
+        <div class="fenetre-controls">
+            <button class="fenetre-reduire">—</button>
+            <button class="fenetre-fermer">✕</button>
+        </div>
+    </div>
+    <div class="fenetre-contenu">
+    <div class="ref-section">
+        <div class="ref-header">
+            <h3>À la une</h3>
+            <span class="ref-fleche">▼</span>
+        </div>
+        <p class="ref-description">Découvrez les dernières actualités et projets proposés par Volkcorp. Une sélection musicale soigneusement choisie pour vous.</p>
+        <div class="ref-liste" id="liste-alaune"></div>
+    </div>
+    <div class="ref-section">
+        <div class="ref-header">
+            <h3>Cover Artists</h3>
+            <span class="ref-fleche">▶</span>
+        </div>
+        <p class="ref-description">Découvrez des covers d'artistes et leurs univers ! Unique, effrayant ou surprenant venez jeter un oeil à une sélection fine proposé par notre équipe.</p>
+        <div class="ref-liste ref-fermee" id="liste-graphistes"></div>
+    </div>
+    <div class="ref-section">
+        <div class="ref-header">
+            <h3>Beatmakers</h3>
+            <span class="ref-fleche">▶</span>
+        </div>
+        <p class="ref-description">Tendez votre oreille et venez écouter des projets et créations de beatmakers venant des quatre coins du monde. Une sélection moelleuse et singulière pour votre plaisir auditif.</p>
+        <div class="ref-liste ref-fermee" id="liste-beatmakers"></div>
+    </div>
+</div>
+</div>
+
+<div id="webamp-container"></div>
+
+<script src="volkcorp.js"></script>
+
+</body>
+</html>
