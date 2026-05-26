@@ -3,257 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>8krom</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geom:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="images/blobvert.png">
+    <title>Volkcorp</title>
+    <link rel="stylesheet" href="volkcorp.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
-    <button id="btn-retour">←</button><a href="volkcorp.html" id="btn-volkcorp">← Volkcorp</a>
-    <span id="etape-label"></span>
-
-    <div id="panier-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8e8e8" stroke-width="1.5">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 01-8 0"/>
-        </svg>
-        <span id="panier-badge">0</span>
-        <div id="panier-dropdown">
-            <ul id="panier-liste"></ul>
-            <div id="panier-total">Total : 0€</div>
-            <button id="btn-valider-panier">Valider →</button>
-        </div>
+    <div id="intro-screen">
+    <img src="images/logo_volkcorp.png" id="intro-logo">
     </div>
 
-    <div id="lightbox-service">
-        <div id="lightbox-service-contenu">
-            <h3 id="ls-titre"></h3>
-            <p id="ls-description"></p>
-            <span id="ls-prix"></span>
-            <button id="ls-ajouter">Ajouter au panier</button>
-        </div>
+    <div id="heure-volkcorp"></div>
+
+    <div id="audio-controls">
+    <button id="audio-toggle">🔊</button>
+    <input type="range" id="audio-volume" min="0" max="100" value="30">
     </div>
 
-    <div id="accueil">
-        <div class="bg-defilement">
-            <div class="bg-piste" id="piste-1"></div>
-            <div class="bg-piste" id="piste-2"></div>
-            <div class="bg-piste" id="piste-3"></div>
-            <div class="bg-piste" id="piste-4"></div>
-            <div class="bg-piste" id="piste-5"></div>
-        </div>
-        <img src="images/8krom_Logo_W.png" alt="8krom" id="logo-accueil">
-        <div class="menu-accueil">
-            <button id="btn-covers">Covers</button>
-            <button id="btn-videos">Visuels</button>
-            <button id="btn-services">Services</button>
-        </div>
-        <img src="images/logo_volkcorp.png" id="logo-volkcorp-accueil">
+    <div id="scene">
+        <div id="cercle"></div>
+        <img src="images/logo_volkcorp.png" id="logo-volkcorp">
+        <div id="bulles"></div>
     </div>
 
-    <main>
-        <section id="galerie">
-            <h2>Galerie covers</h2>
-            <div class="barre-filtres">
-                <div class="filtres">
-                    <button data-categorie="tous">Tous</button>
-                    <button data-categorie="photomontage">Photomontage</button>
-                    <button data-categorie="dessin">Dessin</button>
-                    <button data-categorie="3d">3D</button>
-                    <button data-categorie="tracklist">Tracklist</button>
-                </div>
-                <div class="bw-container">
-                    <div id="compteur">000</div>
-                    <span class="bw-label">N&B</span>
-                    <label class="toggle">
-                        <input type="checkbox" id="bw-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="grille"></div>
-        </section>
-    </main>
-
-    <section id="galerie-videos" style="display:none">
-        <h2>Galerie videos</h2>
-        <div class="grille-videos"></div>
-    </section>
-
-    <section id="page-services" style="display:none">
-    <img src="images/logo_volkcorp.png" class="logo-bg">
-    <h2>Services</h2>
-    <div class="grille-tarifs">
-        <div class="carte-tarif" data-nom="Photoedit" data-prix="50" data-filtre="photomontage">
-            <h3>Photoedit</h3>
-            <p>Réalisation 2D par empilement d'images issues du web ou de ma banque personnelle, avec incrustation de l'artiste. La qualité finale dépend directement de la qualité des photos fournies.</p>
-            <span class="prix">50€</span>
-            <div class="boutons">
-                <button class="btn-exemple">Voir exemple</button>
-                <button class="btn-ajouter">Ajouter</button>
-            </div>
-        </div>
-        <div class="carte-tarif" data-nom="Photoedit + Dessin" data-prix="80" data-filtre="mixte">
-            <h3>Photoedit + Dessin</h3>
-            <p>Réalisation 2D d'un fond/environnement en photomontage, avec un ou plusieurs personnages dessinés à la main et incrustés dans la scène.</p>
-            <span class="prix">80€</span>
-            <div class="boutons">
-                <button class="btn-exemple">Voir exemple</button>
-                <button class="btn-ajouter">Ajouter</button>
-            </div>
-        </div>
-        <div class="carte-tarif" data-nom="Full dessin" data-prix="100" data-filtre="dessin">
-            <h3>Full Dessin</h3>
-            <p>Réalisation 2D entièrement dessinée à la main. Le prix varie selon la complexité de l'environnement et de la composition.</p>
-            <span class="prix">60€ — 100€</span>
-            <div class="boutons">
-                <button class="btn-exemple">Voir exemple</button>
-                <button class="btn-ajouter">Ajouter</button>
-            </div>
-        </div>
-        <div class="carte-tarif" data-nom="Animation" data-prix="40" data-filtre="video">
-            <h3>Animation</h3>
-            <p>Réalisation d'une animation de ta cover d'une durée de 10 à 30 secondes, livrée en format carré et vertical pour les réseaux sociaux.</p>
-            <span class="prix">40€</span>
-            <div class="boutons">
-                <button class="btn-exemple">Voir exemple</button>
-                <button class="btn-ajouter">Ajouter</button>
-            </div>
-        </div>
-        <div class="carte-tarif" data-nom="Tracklist" data-prix="20" data-filtre="tracklist">
-            <h3>Tracklist</h3>
-            <p>Création d'une tracklist assortie à ta cover. En supplément de toute commande.</p>
-            <span class="prix">20€</span>
-            <div class="boutons">
-                <button class="btn-exemple">Voir exemple</button>
-                <button class="btn-ajouter">Ajouter</button>
-            </div>
-        </div>
-    </div>
-</section>
-
-    <section id="page-commande" style="display:none">
-        <img src="images/logo_volkcorp.png" class="logo-bg">
-        <form id="formulaire-commande" action="https://formspree.io/f/xojrrqqb" method="POST">
-            <h2>Ma commande</h2>
-            <div id="recap-commande"></div>
-            <div class="champ">
-                <label>Nom / Pseudo</label>
-                <input type="text" id="f-nom" name="nom" placeholder="Ton nom ou pseudo">
-            </div>
-            <div class="champ">
-                <label>Contact</label>
-                <input type="text" id="f-contact" name="contact" placeholder="Email ou Instagram">
-            </div>
-            <div class="champ">
-                <label>Décris ton idée</label>
-                <textarea id="f-message" name="description" placeholder="Artiste, ambiance, références, couleurs..."></textarea>
-            </div>
-            <div class="champ">
-                <label>Deadline souhaitée</label>
-                <input type="date" id="f-deadline" name="deadline">
-            </div>
-            <div class="champ">
-                <label>Ta photo (PNG ou JPG)</label>
-                <div id="zone-upload">
-                    <p>Glisse ta photo ici ou clique pour choisir</p>
-                    <input type="file" id="f-photo" name="photo" accept=".png,.jpg,.jpeg">
-                </div>
-            </div>
-            <div class="champ">
-                <label>Code promo</label>
-                <div class="champ-promo">
-                    <input type="text" id="f-promo" name="code_promo" placeholder="Entre ton code ici">
-                    <button id="btn-promo">Appliquer</button>
-                </div>
-                <span id="promo-message"></span>
-            </div>
-            <div class="champ champ-fidelite">
-                <label class="label-checkbox">
-                    <input type="checkbox" id="f-fidelite">
-                    <span>J'ai déjà commandé chez 8krom</span>
-                </label>
-                <span id="fidelite-message"></span>
-            </div>
-            <input type="hidden" name="commande" id="f-commande">
-            <button id="btn-envoyer">Envoyer ma commande</button>
-        </form>
-    </section>
-    
-    <section id="page-mentions" style="display:none">
-    <div id="contenu-mentions">
-        <h2>Mentions légales</h2>
-        <p>Éditeur du site : Tom Cazeaux, particulier domicilié à Bordeaux (33)</p>
-        <p>Activité : Création graphique et visuelle sous le nom artistique 8krom</p>
-        <p>Contact : tom.cazeaux@gmail.com</p>
-        <p>Hébergement : Vercel Inc., 340 Pine Street Suite 701, San Francisco, CA 94104</p>
-        <p>Propriété intellectuelle : L'ensemble des créations visuelles présentes sur ce site sont la propriété exclusive de Tom Cazeaux. Toute reproduction sans autorisation est interdite.</p>
-    </div>
-    </section>
-
-    <section id="page-cgv" style="display:none">
-    <div id="contenu-cgv">
-        <h2>Conditions Générales de Vente</h2>
-
-        <div class="cgv-article">
-            <h3>1. Prestations</h3>
-            <p>Les prestations proposées comprennent la création de visuels graphiques (photomontage, dessin numérique, animation) destinés exclusivement à un usage musical.</p>
-        </div>
-
-        <div class="cgv-article">
-            <h3>2. Tarifs et paiement</h3>
-            <p>Les tarifs sont indiqués sur le site. Un acompte de 50% minimum est exigé avant le début de toute création. Cet acompte est non remboursable. Le solde est réglé à la livraison du fichier final.</p>
-        </div>
-
-        <div class="cgv-article">
-            <h3>3. Délais de livraison</h3>
-            <p>Les délais varient selon la prestation choisie. À titre indicatif : Photoedit 24-48h, Dessin numérique 3-7 jours. Ces délais peuvent varier selon la charge de travail et la complexité du projet.</p>
-        </div>
-
-        <div class="cgv-article">
-            <h3>4. Révisions</h3>
-            <p>Chaque commande inclut 2 révisions mineures (ajustement de couleurs, texte, placement). Toute modification majeure ou demande supplémentaire au-delà de ces 2 révisions sera facturée 20€ par révision.</p>
-        </div>
-
-        <div class="cgv-article">
-            <h3>5. Droits d'utilisation</h3>
-            <p>Le client acquiert le droit d'utiliser la création à des fins musicales uniquement : réseaux sociaux, plateformes de streaming, promotion artistique. Toute utilisation commerciale sur du merchandising ou tout autre support physique ou numérique en dehors du cadre musical est strictement interdite sans accord écrit préalable de 8krom.</p>
-        </div>
-
-        <div class="cgv-article">
-            <h3>6. Propriété intellectuelle</h3>
-            <p>8krom conserve le droit moral sur toutes les créations réalisées et se réserve le droit de les utiliser dans son portfolio et à des fins de promotion de son activité.</p>
-        </div>
-
-        <div class="cgv-article">
-            <h3>7. Annulation</h3>
-            <p>En cas d'annulation après démarrage du projet, l'acompte versé reste acquis à 8krom en compensation du travail engagé.</p>
-        </div>
-
-        <div class="cgv-article">
-            <h3>8. Litiges</h3>
-            <p>En cas de litige, une solution amiable sera recherchée en priorité. À défaut, les tribunaux de Bordeaux seront compétents.</p>
-        </div>
-    </div>
-</section>
-
-    <footer>
-        <p>© 2026 - 8krom</p>
-        <button id="btn-mentions">Mentions légales</button>
-        <button id="btn-cgv">CGV</button>
+    <footer id="footer-volkcorp">
+        <p>VOLKCORP INDUSTRIES © 2026 — ALL RIGHTS RESERVED</p>
+        <p>CLASSIFIED DOCUMENT — INTERNAL USE ONLY</p>
+        <p>VKC-8K-AUTH-2026 · BASED IN BORDEAUX · FROM THE SWAMP</p>
     </footer>
 
-    <div id="lightbox">
-        <img id="lightbox-img" src="" alt="">
-        <video id="lightbox-video" src="" controls></video>
-        <p id="lightbox-titre"></p>
-        <iframe id="lightbox-player" scrolling="no" frameborder="no" allow="autoplay" src=""></iframe>
+    <div class="fenetre" id="fenetre-partage">
+    <div class="fenetre-barre">
+        <span class="fenetre-titre">Partage — Volkcorp</span>
+        <div class="fenetre-controls">
+            <button class="fenetre-reduire">—</button>
+            <button class="fenetre-fermer">✕</button>
+        </div>
     </div>
+    <div class="fenetre-contenu">
+    <div class="ref-section">
+        <div class="ref-header">
+            <h3>À la une</h3>
+            <span class="ref-fleche">▼</span>
+        </div>
+        <p class="ref-description">Découvrez les dernières actualités et projets proposés par Volkcorp. Une sélection musicale soigneusement choisie pour vous.</p>
+        <div class="ref-liste" id="liste-alaune"></div>
+    </div>
+    <div class="ref-section">
+        <div class="ref-header">
+            <h3>Cover Artists</h3>
+            <span class="ref-fleche">▶</span>
+        </div>
+        <p class="ref-description">Découvrez des covers d'artistes et leurs univers ! Unique, effrayant ou surprenant venez jeter un oeil à une sélection fine proposé par notre équipe.</p>
+        <div class="ref-liste ref-fermee" id="liste-graphistes"></div>
+    </div>
+    <div class="ref-section">
+        <div class="ref-header">
+            <h3>Beatmakers</h3>
+            <span class="ref-fleche">▶</span>
+        </div>
+        <p class="ref-description">Tendez votre oreille et venez écouter des projets et créations de beatmakers venant des quatre coins du monde. Une sélection moelleuse et singulière pour votre plaisir auditif.</p>
+        <div class="ref-liste ref-fermee" id="liste-beatmakers"></div>
+    </div>
+</div>
+</div>
 
-    <script src="script.js"></script>
+<div id="webamp-container"></div>
+
+<script src="volkcorp.js"></script>
+
 </body>
 </html>
