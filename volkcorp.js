@@ -1,21 +1,21 @@
 // Sound Design
 const sons = {
-    fond: new Audio("Sounddesign site/Sound Background site.wav"),
-    demarrage: new Audio("Sounddesign site/démarrage.wav"),
+    fond: new Audio("sounddesign_site/sound_background_site.wav"),
+    demarrage: new Audio("sounddesign_site/démarrage.wav"),
     bull: [
-        new Audio("Sounddesign site/bull 1.wav"),
-        new Audio("Sounddesign site/bull 2.wav"),
-        new Audio("Sounddesign site/bull 3.wav"),
-        new Audio("Sounddesign site/bull 4.wav")
+        new Audio("sounddesign_site/bull 1.wav"),
+        new Audio("sounddesign_site/bull 2.wav"),
+        new Audio("sounddesign_site/bull 3.wav"),
+        new Audio("sounddesign_site/bull 4.wav")
     ],
     hover: [
-        new Audio("Sounddesign site/passage souris 1.wav"),
-        new Audio("Sounddesign site/passage souris 2.wav"),
-        new Audio("Sounddesign site/passage souris 3.wav"),
-        new Audio("Sounddesign site/passage souris 4.wav")
+        new Audio("sounddesign_site/passage souris 1.wav"),
+        new Audio("sounddesign_site/passage souris 2.wav"),
+        new Audio("sounddesign_site/passage souris 3.wav"),
+        new Audio("sounddesign_site/passage souris 4.wav")
     ],
-    clik: new Audio("Sounddesign site/clik 1.wav"),
-    retour: new Audio("Sounddesign site/clik retour 1.wav")
+    clik: new Audio("sounddesign_site/clik 1.wav"),
+    retour: new Audio("sounddesign_site/clik retour 1.wav")
 };
 
 sons.fond.loop = true;
@@ -39,7 +39,7 @@ document.getElementById("intro-screen").addEventListener("click", function() {
 function onYouTubeIframeAPIReady() {}
 
 const bullesData = [
-    { nom: "8krom", lien: "index.html" },
+    { nom: "8krom", lien: "8krom.html" },
     { nom: "Itsdie4u", lien: "#" },
     { nom: "Lecoachhh", lien: "#" },
     { nom: "Partage", lien: "#" },
