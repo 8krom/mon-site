@@ -1,21 +1,21 @@
 // Sound Design
 const sons = {
     fond: new Audio("sounddesign_site/sound_background_site.wav"),
-    demarrage: new Audio("sounddesign_site/démarrage.wav"),
+    demarrage: new Audio("sounddesign_site/demarrage.wav"),
     bull: [
-        new Audio("sounddesign_site/bull 1.wav"),
-        new Audio("sounddesign_site/bull 2.wav"),
-        new Audio("sounddesign_site/bull 3.wav"),
-        new Audio("sounddesign_site/bull 4.wav")
+        new Audio("sounddesign_site/bull1.wav"),
+        new Audio("sounddesign_site/bull2.wav"),
+        new Audio("sounddesign_site/bull3.wav"),
+        new Audio("sounddesign_site/bull4.wav")
     ],
     hover: [
-        new Audio("sounddesign_site/passage souris 1.wav"),
-        new Audio("sounddesign_site/passage souris 2.wav"),
-        new Audio("sounddesign_site/passage souris 3.wav"),
-        new Audio("sounddesign_site/passage souris 4.wav")
+        new Audio("sounddesign_site/passagesouris1.wav"),
+        new Audio("sounddesign_site/passagesouris2.wav"),
+        new Audio("sounddesign_site/passagesouris3.wav"),
+        new Audio("sounddesign_site/passagesouris4.wav")
     ],
-    clik: new Audio("sounddesign_site/clik 1.wav"),
-    retour: new Audio("sounddesign_site/clik retour 1.wav")
+    clik: new Audio("sounddesign_site/clik1.wav"),
+    retour: new Audio("sounddesign_site/clikretour1.wav")
 };
 
 sons.fond.loop = true;
