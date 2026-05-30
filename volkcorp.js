@@ -643,9 +643,69 @@ function creerWebamp() {
                     });
                 });
             }
+
+            const skins = [
+    "winamp_skin/Aj.wsz",
+    "winamp_skin/dexter_amp.wsz",
+    "winamp_skin/DNA_Helix_2.wsz",
+    "winamp_skin/Episode_II_Obi-Wan_Kenobi_3.wsz",
+    "winamp_skin/Garfeil_by_tox.wsz",
+    "winamp_skin/Homer_Simpson_Goes_3D.wsz",
+    "winamp_skin/iBDE_V4-T_for_Winamp.wsz",
+    "winamp_skin/Lunarscape.wsz",
+    "winamp_skin/MEGA.wsz",
+    "winamp_skin/monaux-lord_of_landmines.wsz",
+    "winamp_skin/my_first_winamp.wsz",
+    "winamp_skin/OrangeAmp_v1.wsz",
+    "winamp_skin/SpyampOrange.wsz",
+    "winamp_skin/ZopoStyle_Orange_Skin.wsz"
+];
+
+            let skinActuel = 7;
+
+            const btnSkin = document.createElement("button");
+            btnSkin.textContent = "SKIN";
+            btnSkin.style.cssText = "position:fixed; top:80px; right:20px; z-index:100; background:transparent; border:none; color:#1f2020; font-family:'Courier New',monospace; font-size:9px; letter-spacing:3px; padding:0; cursor:pointer; opacity:0.6;";
+            btnSkin.addEventListener("click", function() {
+                let nouveau = Math.floor(Math.random() * skins.length);
+                while (nouveau === skinActuel) {
+                    nouveau = Math.floor(Math.random() * skins.length);
+                }
+                skinActuel = nouveau;
+                webamp.setSkinFromUrl(skins[skinActuel]);
+            });
+            document.body.appendChild(btnSkin);
+
         }, 500);
     });
 }
+
+function ouvrirRadio() {
+    if (!webampScriptCharge) {
+        webampScriptCharge = true;
+        const script = document.createElement("script");
+        script.src = "webamp.bundle.min.js";
+        script.onload = creerWebamp;
+        document.head.appendChild(script);
+    } else {
+        creerWebamp();
+    }
+}
+
+document.getElementById("audio-volume").addEventListener("input", function() {
+    const vol = this.value / 100;
+    sons.fond.volume = vol;
+});
+
+document.getElementById("audio-toggle").addEventListener("click", function() {
+    if (sons.fond.muted) {
+        sons.fond.muted = false;
+        this.textContent = "🔊";
+    } else {
+        sons.fond.muted = true;
+        this.textContent = "🔇";
+    }
+});
 
 function ouvrirRadio() {
     if (!webampScriptCharge) {
