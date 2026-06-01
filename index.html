@@ -9,68 +9,174 @@
 </head>
 <body>
 
+    <!-- INTRO -->
     <div id="intro-screen">
-    <img src="images/logo_volkcorp.png" id="intro-logo">
+        <img src="images/logo_volkcorp.png" id="intro-logo">
     </div>
 
+    <!-- UI FIXE -->
     <div id="heure-volkcorp"></div>
 
     <div id="audio-controls">
-    <button id="audio-toggle">🔊</button>
-    <input type="range" id="audio-volume" min="0" max="100" value="30">
+        <button id="audio-toggle">🔊</button>
+        <input type="range" id="audio-volume" min="0" max="100" value="30">
     </div>
 
+    <button id="btn-embauche">REJOINDRE VOLKCORP</button>
+
+    <!-- SCENE PRINCIPALE -->
     <div id="scene">
         <div id="cercle"></div>
         <img src="images/logo_volkcorp.png" id="logo-volkcorp">
         <div id="bulles"></div>
     </div>
 
+    <!-- FOOTER -->
     <footer id="footer-volkcorp">
-        <p>VOLKCORP INDUSTRIES © 2026 — ALL RIGHTS RESERVED</p>
+        <p>VOLKCORPORATION © 2026 — ALL RIGHTS RESERVED</p>
         <p>CLASSIFIED DOCUMENT — INTERNAL USE ONLY</p>
-        <p>VKC-8K-AUTH-2026 · BASED IN BORDEAUX · FROM THE SWAMP</p>
+        <p>VKC-8K-AUTH-2026</p>
     </footer>
 
+    <!-- FENETRES -->
     <div class="fenetre" id="fenetre-partage">
-    <div class="fenetre-barre">
-        <span class="fenetre-titre">Partage — Volkcorp</span>
-        <div class="fenetre-controls">
-            <button class="fenetre-reduire">—</button>
-            <button class="fenetre-fermer">✕</button>
+        <div class="fenetre-barre">
+            <span class="fenetre-titre">Partage — Volkcorp</span>
+            <div class="fenetre-controls">
+                <button class="fenetre-reduire">—</button>
+                <button class="fenetre-fermer">✕</button>
+            </div>
+        </div>
+        <div class="fenetre-contenu">
+            <div class="ref-section">
+                <div class="ref-header">
+                    <h3>À la une</h3>
+                    <span class="ref-fleche">▼</span>
+                </div>
+                <p class="ref-description">Découvrez les dernières actualités et projets proposés par Volkcorp. Une sélection musicale soigneusement choisie pour vous.</p>
+                <div class="ref-liste" id="liste-alaune"></div>
+            </div>
+            <div class="ref-section">
+                <div class="ref-header">
+                    <h3>Cover Artists</h3>
+                    <span class="ref-fleche">▶</span>
+                </div>
+                <p class="ref-description">Découvrez des covers d'artistes et leurs univers ! Unique, effrayant ou surprenant venez jeter un oeil à une sélection fine proposé par notre équipe.</p>
+                <div class="ref-liste ref-fermee" id="liste-graphistes"></div>
+            </div>
+            <div class="ref-section">
+                <div class="ref-header">
+                    <h3>Beatmakers</h3>
+                    <span class="ref-fleche">▶</span>
+                </div>
+                <p class="ref-description">Tendez votre oreille et venez écouter des projets et créations de beatmakers venant des quatre coins du monde. Une sélection moelleuse et singulière pour votre plaisir auditif.</p>
+                <div class="ref-liste ref-fermee" id="liste-beatmakers"></div>
+            </div>
         </div>
     </div>
-    <div class="fenetre-contenu">
-    <div class="ref-section">
-        <div class="ref-header">
-            <h3>À la une</h3>
-            <span class="ref-fleche">▼</span>
-        </div>
-        <p class="ref-description">Découvrez les dernières actualités et projets proposés par Volkcorp. Une sélection musicale soigneusement choisie pour vous.</p>
-        <div class="ref-liste" id="liste-alaune"></div>
-    </div>
-    <div class="ref-section">
-        <div class="ref-header">
-            <h3>Cover Artists</h3>
-            <span class="ref-fleche">▶</span>
-        </div>
-        <p class="ref-description">Découvrez des covers d'artistes et leurs univers ! Unique, effrayant ou surprenant venez jeter un oeil à une sélection fine proposé par notre équipe.</p>
-        <div class="ref-liste ref-fermee" id="liste-graphistes"></div>
-    </div>
-    <div class="ref-section">
-        <div class="ref-header">
-            <h3>Beatmakers</h3>
-            <span class="ref-fleche">▶</span>
-        </div>
-        <p class="ref-description">Tendez votre oreille et venez écouter des projets et créations de beatmakers venant des quatre coins du monde. Une sélection moelleuse et singulière pour votre plaisir auditif.</p>
-        <div class="ref-liste ref-fermee" id="liste-beatmakers"></div>
-    </div>
-</div>
-</div>
 
-<div id="webamp-container"></div>
+    <div class="fenetre" id="fenetre-embauche" style="display:none; width:450px; top:120px; left:400px;">
+        <div class="fenetre-barre" id="barre-embauche">
+            <span class="fenetre-titre">VolkCorporation — Dossier RH</span>
+            <div class="fenetre-controls">
+                <button class="fenetre-fermer-embauche">✕</button>
+            </div>
+        </div>
+        <div class="fenetre-contenu" id="contenu-embauche">
+            <div id="doc-admin">
+                <div id="doc-header">
+                    <div id="doc-tampon">CLASSIFIÉ</div>
+                    <p id="doc-ref">REF : VKC-RH-2026</p>
+                    <h2 id="doc-titre">FORMULAIRE DE LIAISON</h2>
+                    <p id="doc-sous-titre">VOLKCORPORATION — USAGE INTERNE UNIQUEMENT</p>
+                </div>
+                <div id="doc-body">
+                    <p id="doc-texte">Le soussigné reconnaît avoir pris connaissance des statuts de VolkCorporation et accepte de lier son âme à l'organisation pour une durée indéterminée.</p>
+                    <div id="auth-connexion">
+                        <div class="doc-champ">
+                            <label>IDENTIFIANT</label>
+                            <input id="auth-email" type="email" placeholder="votre@email.com">
+                        </div>
+                        <div class="doc-champ">
+                            <label>CODE SECRET</label>
+                            <input id="auth-mdp" type="password" placeholder="••••••••">
+                        </div>
+                        <div id="doc-boutons">
+                            <button id="btn-signer" onclick="connecter()">SIGNER LE CONTRAT</button>
+                            <button id="btn-creer" onclick="inscrire()">CRÉER MON DOSSIER</button>
+                        </div>
+                    </div>
+                    <div id="auth-deconnexion" style="display:none">
+                        <p id="auth-status"></p>
+                        <button id="btn-quitter" onclick="deconnecter()">RÉSILIER LE CONTRAT</button>
+                    </div>
+                </div>
+                <div id="doc-footer">
+                    <p>VKC-AUTH-2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script src="volkcorp.js"></script>
+    <!-- WEBAMP -->
+    <div id="webamp-container"></div>
+
+    <!-- SCRIPTS -->
+    <script src="volkcorp.js"></script>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyARYF5I7nPcqlGFKEPFRQE-yG3K7fQ2iEU",
+        authDomain: "volkcorp-6ff20.firebaseapp.com",
+        projectId: "volkcorp-6ff20",
+        storageBucket: "volkcorp-6ff20.firebasestorage.app",
+        messagingSenderId: "180494908582",
+        appId: "1:180494908582:web:7a466a78b829da8a668867"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById("auth-connexion").style.display = "none";
+            document.getElementById("auth-deconnexion").style.display = "block";
+            document.getElementById("auth-status").textContent = "EMPLOYÉ : " + user.email;
+            document.getElementById("btn-embauche").textContent = "MON DOSSIER";
+        } else {
+            document.getElementById("auth-connexion").style.display = "block";
+            document.getElementById("auth-deconnexion").style.display = "none";
+            document.getElementById("btn-embauche").textContent = "REJOINDRE VOLKCORP";
+        }
+    });
+
+    window.inscrire = function() {
+        const email = document.getElementById("auth-email").value;
+        const mdp = document.getElementById("auth-mdp").value;
+        createUserWithEmailAndPassword(auth, email, mdp)
+            .then(() => {
+                document.getElementById("fenetre-embauche").style.display = "none";
+            })
+            .catch(e => alert("Erreur : " + e.message));
+    };
+
+    window.connecter = function() {
+        const email = document.getElementById("auth-email").value;
+        const mdp = document.getElementById("auth-mdp").value;
+        signInWithEmailAndPassword(auth, email, mdp)
+            .then(() => {
+                document.getElementById("fenetre-embauche").style.display = "none";
+            })
+            .catch(e => alert("Erreur : " + e.message));
+    };
+
+    window.deconnecter = function() {
+        signOut(auth);
+    };
+</script>
 
 </body>
 </html>

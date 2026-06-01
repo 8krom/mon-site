@@ -508,3 +508,159 @@ body {
     height: 3px;
     cursor: pointer;
 }
+
+#btn-embauche {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: transparent;
+    border: none;
+    color: #1f2020;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    padding: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+#btn-embauche:hover {
+    opacity: 1;
+}
+
+#doc-admin {
+    font-family: 'Courier New', monospace;
+    padding: 20px;
+    background: #f5f0e8;
+    border: 1px solid #c0bdb5;
+    color: #1f2020;
+}
+
+#doc-tampon {
+    color: #8b0000;
+    border: 3px solid #8b0000;
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    transform: rotate(-8deg);
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+#doc-ref {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #808080;
+    margin: 0;
+}
+
+#doc-titre {
+    font-size: 16px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin: 10px 0 4px 0;
+    border-bottom: 2px solid #1f2020;
+    padding-bottom: 6px;
+}
+
+#doc-sous-titre {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #808080;
+    margin: 0 0 16px 0;
+}
+
+#doc-texte {
+    font-size: 11px;
+    line-height: 1.8;
+    color: #404040;
+    border-left: 2px solid #ec911a;
+    padding-left: 10px;
+    margin-bottom: 16px;
+}
+
+.doc-champ {
+    margin-bottom: 10px;
+}
+
+.doc-champ label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #808080;
+    margin-bottom: 4px;
+}
+
+.doc-champ input {
+    width: 100%;
+    background: #f5f0e8;
+    border: none;
+    border-bottom: 1px solid #1f2020;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #1f2020;
+    padding: 4px 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#doc-boutons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+#btn-signer, #btn-creer {
+    flex: 1;
+    background: #1f2020;
+    border: none;
+    color: #c0bdb5;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#btn-signer:hover {
+    background: #ec911a;
+    color: #1f2020;
+}
+
+#btn-creer:hover {
+    background: #ec911a;
+    color: #1f2020;
+}
+
+#auth-status {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #ec911a;
+    margin-bottom: 10px;
+}
+
+#btn-quitter {
+    background: #8b0000;
+    border: none;
+    color: #f5f0e8;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+#doc-footer {
+    margin-top: 20px;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: #808080;
+    border-top: 1px solid #c0bdb5;
+    padding-top: 8px;
+    text-align: center;
+}

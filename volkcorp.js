@@ -622,10 +622,18 @@ function creerWebamp() {
     });
     webamp.renderWhenReady(document.getElementById("webamp-container")).then(() => {
         webamp.appendTracks([
-            { metaData: { artist: "@spetsnazgdz @yxngwaga", title: "game 144" }, url: "radio_moelleuse/spetsnazgdz_yxngwaga_game_144.mp3" },
-            { metaData: { artist: "@spetsnazgdz @why5 @ninagen", title: "ref" }, url: "radio_moelleuse/spetsnazgdz_why5_ninagen_ref.mp3" },
-            { metaData: { artist: "@spetsnazgdz @why5", title: "flight 151" }, url: "radio_moelleuse/spetsnazgdz_why5_flight_151.mp3" },
-            { metaData: { artist: "@spetsnazgdz @why5", title: "cult 140" }, url: "radio_moelleuse/spetsnazgdz_why5_cult_140.mp3" }
+            { metaData: { artist: "Radio Moelleuse", title: "@spetsnazgdz @glorykeyz - village 154" }, url: "radio_moelleuse/@spetsnazgdz @glorykeyz - village 154.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "@spetsnazgdz @litfroy - w 147" }, url: "radio_moelleuse/@spetsnazgdz @litfroy - w 147.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "@spetsnazgdz @mewerk - skint 136" }, url: "radio_moelleuse/@spetsnazgdz @mewerk - skint 136.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "@spetsnazgdz @ncxtzxstv - altcity 142 (1)" }, url: "radio_moelleuse/@spetsnazgdz @ncxtzxstv - altcity 142 (1).mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "@spetsnazgdz @ncxtzxstv - cry 149" }, url: "radio_moelleuse/@spetsnazgdz @ncxtzxstv - cry 149.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "Serpent Mist stoopidxool x paymels" }, url: "radio_moelleuse/Serpent Mist stoopidxool x paymels.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "Shadow Planet stoopidxool x paymels" }, url: "radio_moelleuse/Shadow Planet stoopidxool x paymels.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "spetsnazgdz why5 cult 140" }, url: "radio_moelleuse/spetsnazgdz_why5_cult_140.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "spetsnazgdz why5 flight 151" }, url: "radio_moelleuse/spetsnazgdz_why5_flight_151.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "spetsnazgdz why5 ninagen ref" }, url: "radio_moelleuse/spetsnazgdz_why5_ninagen_ref.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "spetsnazgdz yxngwaga game 144" }, url: "radio_moelleuse/spetsnazgdz_yxngwaga_game_144.mp3" },
+            { metaData: { artist: "Radio Moelleuse", title: "Total Eclipse stoopidxool x paymels" }, url: "radio_moelleuse/Total Eclipse stoopidxool x paymels.mp3" }
         ]);
         document.querySelectorAll("[class*='webamp']").forEach(el => {
             el.style.zIndex = "99999";
@@ -733,3 +741,41 @@ document.getElementById("audio-toggle").addEventListener("click", function() {
         this.textContent = "🔇";
     }
 });
+
+document.getElementById("btn-embauche").addEventListener("click", function() {
+    const f = document.getElementById("fenetre-embauche");
+    f.style.display = "block";
+    f.classList.remove("fenetre-visible");
+    setTimeout(() => f.classList.add("fenetre-visible"), 10);
+});
+
+document.querySelector(".fenetre-fermer-embauche").addEventListener("click", function() {
+    sons.retour.currentTime = 0;
+    sons.retour.play();
+    document.getElementById("fenetre-embauche").style.display = "none";
+});
+
+document.getElementById("btn-embauche").addEventListener("click", function() {
+    sons.clik.currentTime = 0;
+    sons.clik.play();
+    const f = document.getElementById("fenetre-embauche");
+    f.style.display = "block";
+    f.classList.remove("fenetre-visible");
+    setTimeout(() => f.classList.add("fenetre-visible"), 10);
+});
+
+const barreEmbauche = document.getElementById("barre-embauche");
+let dragE = false, sxE, syE, slE, stE;
+barreEmbauche.addEventListener("mousedown", function(e) {
+    dragE = true;
+    const f = document.getElementById("fenetre-embauche");
+    sxE = e.clientX; syE = e.clientY;
+    slE = f.offsetLeft; stE = f.offsetTop;
+});
+document.addEventListener("mousemove", function(e) {
+    if (!dragE) return;
+    const f = document.getElementById("fenetre-embauche");
+    f.style.left = (slE + e.clientX - sxE) + "px";
+    f.style.top = (stE + e.clientY - syE) + "px";
+});
+document.addEventListener("mouseup", function() { dragE = false; });
