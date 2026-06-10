@@ -11,6 +11,8 @@
 </head>
 <body>
 
+<div id="bios-screen"></div>
+
     <div id="crt-overlay"></div>
 <button id="crt-toggle" data-aide="Active ou désactive l'effet écran cathodique">CRT</button>
 
@@ -42,15 +44,20 @@
         <div id="bulles"></div>
     </div>
 
+    <div id="compteur-volkcorp">
+    <span id="compteur-visiteurs" data-aide="Nombre total de visiteurs">------</span>
+    <span id="compteur-online" data-aide="Personnes en ligne en ce moment">---</span>
+    </div>
+
     <!-- FOOTER -->
     <footer id="footer-volkcorp">
         <p>VOLKCORPORATION © 2026 — ALL RIGHTS RESERVED</p>
-        <p>CLASSIFIED DOCUMENT — INTERNAL USE ONLY</p>
         <p>VKC-8K-AUTH-2026</p>
         <a href="https://ko-fi.com/volkcorporation" target="_blank" id="lien-don" data-aide="Soutiens le projet avec un don libre">☕ SOUTENIR VOLKCORP</a>
-        <p id="compteur-volkcorp">VISITEURS <span id="compteur-visiteurs">------</span> · EN LIGNE <span id="compteur-online">---</span></p>
     </footer>
 
+    <button id="lien-guestbook" data-aide="Signe le livre d'or du collectif" onclick="ouvrirGuestbook()">📖 SIGNER LE LIVRE D'OR</button>
+    
     <!-- FENETRES -->
     <div class="fenetre" id="fenetre-partage">
         <div class="fenetre-barre">
@@ -170,6 +177,77 @@
         const n = snap.val() || 0;
         document.getElementById("compteur-visiteurs").textContent = String(n).padStart(6, "0");
     });
+
+// === LIVRE D'OR ===
+    const refGuestbook = ref(rtdb, "guestbook");
+
+    function echapper(txt) {
+        const d = document.createElement("div");
+        d.textContent = txt == null ? "" : String(txt);
+        return d.innerHTML;
+    }
+
+    window.ouvrirGuestbook = function() {
+        let f = document.getElementById("fenetre-guestbook");
+        if (!f) {
+            f = document.createElement("div");
+            f.id = "fenetre-guestbook";
+            f.classList.add("fenetre");
+            f.style.width = "440px";
+            f.style.left = "300px";
+            f.style.top = "130px";
+            f.innerHTML = `
+                <div class="fenetre-barre" id="barre-guestbook">
+                    <span class="fenetre-titre">Livre d'or — Volkcorp</span>
+                    <div class="fenetre-controls">
+                        <button class="fenetre-fermer-guestbook">✕</button>
+                    </div>
+                </div>
+                <div class="fenetre-contenu">
+                    <div id="gb-form">
+                        <input id="gb-nom" type="text" maxlength="20" placeholder="PSEUDO">
+                        <textarea id="gb-message" maxlength="140" placeholder="Laisse une trace dans le marécage..."></textarea>
+                        <button id="gb-envoyer">SIGNER LE LIVRE</button>
+                    </div>
+                    <div id="gb-liste"></div>
+                </div>
+            `;
+            document.body.appendChild(f);
+
+            f.querySelector(".fenetre-fermer-guestbook").addEventListener("click", () => {
+                f.style.display = "none";
+            });
+
+            const barre = f.querySelector("#barre-guestbook");
+            let drag = false, sx, sy, sl, st;
+            barre.addEventListener("mousedown", e => { drag = true; sx = e.clientX; sy = e.clientY; sl = f.offsetLeft; st = f.offsetTop; });
+            document.addEventListener("mousemove", e => { if (!drag) return; f.style.left = (sl + e.clientX - sx) + "px"; f.style.top = (st + e.clientY - sy) + "px"; });
+            document.addEventListener("mouseup", () => drag = false);
+
+            f.querySelector("#gb-envoyer").addEventListener("click", () => {
+                const nom = f.querySelector("#gb-nom").value.trim() || "Anonyme";
+                const message = f.querySelector("#gb-message").value.trim();
+                if (!message) return;
+                push(refGuestbook, { nom: nom.slice(0, 20), message: message.slice(0, 140), date: Date.now() });
+                f.querySelector("#gb-message").value = "";
+                f.querySelector("#gb-nom").value = "";
+            });
+
+            onValue(refGuestbook, (snap) => {
+                const liste = f.querySelector("#gb-liste");
+                const entrees = [];
+                snap.forEach(c => entrees.push(c.val()));
+                entrees.sort((a, b) => (b.date || 0) - (a.date || 0));
+                liste.innerHTML = entrees.map(e => {
+                    const d = e.date ? new Date(e.date).toLocaleDateString("fr-FR") : "";
+                    return `<div class="gb-entree"><div class="gb-tete"><span class="gb-nom">${echapper(e.nom)}</span><span class="gb-date">${d}</span></div><div class="gb-msg">${echapper(e.message)}</div></div>`;
+                }).join("") || "<p class='gb-vide'>Sois le premier à signer le marécage.</p>";
+            });
+        }
+        f.style.display = "block";
+        f.classList.remove("fenetre-visible");
+        setTimeout(() => f.classList.add("fenetre-visible"), 10);
+    };
 
     // Présence : nombre de personnes en ligne
     const refOnline = ref(rtdb, "online");

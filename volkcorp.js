@@ -36,32 +36,69 @@ document.getElementById("intro-screen").addEventListener("click", function() {
     const intro = document.getElementById("intro-screen");
     const progress = document.getElementById("intro-progress");
     const status = document.getElementById("intro-status");
+    const bios = document.getElementById("bios-screen");
 
-    const etapes = [
-        "INITIALISATION DU SYSTÈME VOLKCORP...",
-        "CHARGEMENT DES MODULES SONORES...",
-        "CONNEXION À LA RADIO MOELLEUSE...",
-        "DÉCRYPTAGE DES DOSSIERS CLASSIFIÉS...",
-        "CALIBRAGE DE L'INTERFACE...",
-        "SYSTÈME PRÊT."
+    // --- SÉQUENCE BIOS ---
+    const lignesBios = [
+        "VOLKCORP BIOS v2.026 - VKC-8K",
+        "Copyright (C) 2026 VolkCorporation",
+        "=====================================",
+        "CPU......: VolkCore 8K @ 1992 MHz",
+        "Memory...: 65536K OK",
+        "Detecting drives...",
+        "  > COVER-DISK ............... [OK]",
+        "  > RADIO-MOELLEUSE .......... [OK]",
+        "  > SOUND-MODULE [Itsdie4u] .. [OK]",
+        "Initializing CRT adapter ..... [OK]",
+        "Decrypting classified files .. [OK]",
+        "=====================================",
+        "SYSTEM READY",
+        "Booting VOLKCORP OS..."
     ];
 
-    let i = 0;
-    function etapeSuivante() {
-        if (i >= etapes.length) {
-            intro.style.opacity = "0";
+    bios.style.display = "block";
+    let b = 0;
+    function ligneBiosSuivante() {
+        if (b < lignesBios.length) {
+            bios.innerHTML += lignesBios[b] + "\n";
+            b++;
+            setTimeout(ligneBiosSuivante, 140);
+        } else {
             setTimeout(() => {
-                intro.style.display = "none";
-                sons.fond.play();
-            }, 600);
-            return;
+                bios.style.display = "none";
+                lancerChargement();
+            }, 500);
         }
-        status.textContent = etapes[i];
-        progress.style.width = ((i + 1) / etapes.length * 100) + "%";
-        i++;
-        setTimeout(etapeSuivante, 450);
     }
-    etapeSuivante();
+    ligneBiosSuivante();
+
+    // --- TA BARRE DE CHARGEMENT (inchangée) ---
+    function lancerChargement() {
+        const etapes = [
+            "INITIALISATION DU SYSTÈME VOLKCORP...",
+            "CHARGEMENT DES MODULES SONORES...",
+            "CONNEXION À LA RADIO MOELLEUSE...",
+            "DÉCRYPTAGE DES DOSSIERS CLASSIFIÉS...",
+            "CALIBRAGE DE L'INTERFACE...",
+            "SYSTÈME PRÊT."
+        ];
+        let i = 0;
+        function etapeSuivante() {
+            if (i >= etapes.length) {
+                intro.style.opacity = "0";
+                setTimeout(() => {
+                    intro.style.display = "none";
+                    sons.fond.play();
+                }, 600);
+                return;
+            }
+            status.textContent = etapes[i];
+            progress.style.width = ((i + 1) / etapes.length * 100) + "%";
+            i++;
+            setTimeout(etapeSuivante, 450);
+        }
+        etapeSuivante();
+    }
 });
 
 function onYouTubeIframeAPIReady() {}

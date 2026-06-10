@@ -875,13 +875,122 @@ body {
 }
 
 #compteur-volkcorp {
-    font-family: 'Courier New', monospace;
-    letter-spacing: 2px;
-    margin-top: 6px;
+    position: fixed;
+    top: 44px;
+    left: 20px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
 }
 #compteur-visiteurs, #compteur-online {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
     color: #ec911a;
     background: #1f2020;
-    padding: 1px 5px;
+    padding: 2px 6px;
     letter-spacing: 3px;
+    cursor: help;
 }
+
+#bios-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    background: #000;
+    color: #ec911a;
+    font-family: "Courier New", monospace;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 30px 40px;
+    white-space: pre;
+    overflow: hidden;
+    text-shadow: 0 0 3px rgba(236, 145, 26, 0.6);
+    display: none;
+}
+#bios-screen::after {
+    content: "▮";
+    animation: bios-blink 1s steps(1) infinite;
+}
+@keyframes bios-blink {
+    50% { opacity: 0; }
+}
+
+#lien-guestbook {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    z-index: 100;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #999999;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+#lien-guestbook:hover { color: #ec911a; }
+
+#gb-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+#gb-nom, #gb-message {
+    background: #f5f0e8;
+    border: 1px solid #1f2020;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #1f2020;
+    padding: 6px 8px;
+    outline: none;
+    box-sizing: border-box;
+}
+#gb-message { resize: vertical; min-height: 60px; }
+#gb-envoyer {
+    background: #1f2020;
+    border: none;
+    color: #c0bdb5;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    padding: 9px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+#gb-envoyer:hover { background: #ec911a; color: #1f2020; }
+#gb-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 240px;
+    overflow-y: auto;
+    border-top: 1px solid #c0bdb5;
+    padding-top: 12px;
+}
+.gb-entree { border-left: 2px solid #ec911a; padding-left: 10px; }
+.gb-tete {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3px;
+}
+.gb-nom {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #ec911a;
+    text-transform: uppercase;
+}
+.gb-date { font-family: 'Courier New', monospace; font-size: 9px; color: #808080; }
+.gb-msg {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #404040;
+    line-height: 1.6;
+    word-break: break-word;
+}
+.gb-vide { font-family: 'Courier New', monospace; font-size: 11px; color: #808080; font-style: italic; }
