@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Itsdie4u — Volkcorp</title>
+<link rel="stylesheet" href="itsdie4u.css">
+
+</head>
+<body>
+
+<a href="index.html" id="retour">← Retour au menu</a>
+
+<div id="machine">
+    <img class="couche" src="itsdie4u/fond.png" alt="Itsdie4u">
+    <img class="hp" data-band="bass" src="itsdie4u/hp2.png" style="left:11.0%; top:18.7%; width:18.3%;">
+    <img class="hp" data-band="bass" src="itsdie4u/hp3.png" style="left:89.3%; top:18.7%; width:18.3%;">
+    <img class="hp" data-band="high" src="itsdie4u/hp5.png" style="left:10.9%; top:49.6%; width:10.8%;">
+    <img class="hp" data-band="high" src="itsdie4u/hp6.png" style="left:89.3%; top:49.6%; width:10.8%;">
+    <img class="hp" data-band="bass" src="itsdie4u/hp4.png" style="left:11.0%; top:80.4%; width:18.3%;">
+    <img class="hp" data-band="bass" src="itsdie4u/hp1.png" style="left:89.3%; top:80.4%; width:18.3%;">
+    <img class="couche" src="itsdie4u/fond_centre.png" alt="">
+    <img class="couche" src="itsdie4u/vis.png" alt="">
+    <img class="couche" src="itsdie4u/fond_bouton.png" alt="">
+
+    <img class="couche" id="knob" src="itsdie4u/knob.png" alt="">
+
+    <img class="couche" src="itsdie4u/play.png" alt="">
+    <img class="couche grise" id="g-play" src="itsdie4u/play_grise.png" alt="">
+    <img class="couche" src="itsdie4u/skip_next.png" alt="">
+    <img class="couche grise" id="g-next" src="itsdie4u/skip_next_grise.png" alt="">
+    <img class="couche" src="itsdie4u/skip_prev.png" alt="">
+    <img class="couche grise" id="g-prev" src="itsdie4u/skip_prev_grise.png" alt="">
+    <img class="couche" src="itsdie4u/pause.png" alt="">
+    <img class="couche grise" id="g-pause" src="itsdie4u/pause_grise.png" alt="">
+
+    <div id="ecran">
+        <div class="reel"><div class="reel-in"></div></div>
+        <div id="ecran-piste">01 / 01</div>
+        <div id="ecran-titre"><span>—</span></div>
+        <div id="ecran-temps">00:00</div>
+        <div id="seek"><div id="seek-rempli"></div></div>
+        <div id="ecran-format">WAV · HD · STEREO</div>
+        <div id="ecran-liste-btn">≡ LISTE</div>
+        <div id="liste"></div>
+    </div>
+
+    <div id="ecran-bas"><canvas id="viz" width="600" height="120"></canvas></div>
+
+    <div class="hotspot" id="hs-prev"  data-action="prev"  data-grise="g-prev"></div>
+    <div class="hotspot" id="hs-play"  data-action="play"  data-grise="g-play"></div>
+    <div class="hotspot" id="hs-knob"></div>
+    <div class="hotspot" id="hs-pause" data-action="pause" data-grise="g-pause"></div>
+    <div class="hotspot" id="hs-next"  data-action="next"  data-grise="g-next"></div>
+</div>
+
+<audio id="audio"></audio>
+
+<script src="itsdie4u.js"></script>
+
+</body>
+</html>

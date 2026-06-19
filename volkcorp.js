@@ -105,10 +105,10 @@ function onYouTubeIframeAPIReady() {}
 
 const bullesData = [
     { nom: "8krom", lien: "8krom.html" },
-    { nom: "Itsdie4u", lien: "#" },
+    { nom: "Itsdie4u", lien: "itsdie4u.html" },
     { nom: "Lecoachhh", lien: "#" },
     { nom: "Partage", lien: "#" },
-    { nom: "?", lien: "#" },
+    { nom: "À la une", lien: "#" },
     { nom: "?", lien: "#" }
 ];
 
@@ -124,6 +124,7 @@ const bulles = bullesData.map(function(data, i) {
     let aide = "Clique pour découvrir " + data.nom;
     if (data.nom === "Partage") aide = "Découvre les cover artists et beatmakers du collectif";
     if (data.nom === "?") aide = "Section à venir...";
+    if (data.nom === "À la une") aide = "Les projets et sorties mis en avant par le collectif";
     div.setAttribute("data-aide", aide);
     div.addEventListener("mouseenter", function() {
     const hoverSon = sons.hover[Math.floor(Math.random() * 4)];
@@ -141,6 +142,8 @@ const bulles = bullesData.map(function(data, i) {
             fp.style.display = "block";
             fp.classList.remove("fenetre-visible");
             setTimeout(() => fp.classList.add("fenetre-visible"), 10);
+        } else if (data.nom === "À la une") {
+            ouvrirAlaune();
         } else if (membres[data.nom]) {
             ouvrirFenetreMembre(membres[data.nom]);
         }
@@ -423,17 +426,57 @@ beatmakers.forEach(function(artiste) {
     document.getElementById("liste-beatmakers").appendChild(tag);
 });
 
-alaune.forEach(function(projet) {
-    const carte = document.createElement("div");
-    carte.classList.add("alaune-carte");
-    carte.innerHTML = "<strong>" + projet.titre + "</strong><br>" + projet.artiste;
-    carte.addEventListener("click", function() {
-        sons.clik.currentTime = 0;
-        sons.clik.play();
-        ouvrirFicheAlaune(projet);
-    });
-    document.getElementById("liste-alaune").appendChild(carte);
-});
+function ouvrirAlaune() {
+    let f = document.getElementById("fenetre-alaune-liste");
+    if (!f) {
+        f = document.createElement("div");
+        f.id = "fenetre-alaune-liste";
+        f.classList.add("fenetre");
+        f.style.width = "440px";
+        f.style.left = "260px";
+        f.style.top = "120px";
+        f.innerHTML = `
+            <div class="fenetre-barre" id="barre-alaune-liste">
+                <span class="fenetre-titre">À la une — Volkcorp</span>
+                <div class="fenetre-controls">
+                    <button class="fenetre-fermer-alaune-liste">✕</button>
+                </div>
+            </div>
+            <div class="fenetre-contenu">
+                <p class="ref-description">Découvrez les dernières actualités et projets proposés par Volkcorp. Une sélection musicale soigneusement choisie pour vous.</p>
+                <div class="ref-liste" id="liste-alaune"></div>
+            </div>
+        `;
+        document.body.appendChild(f);
+
+        f.querySelector(".fenetre-fermer-alaune-liste").addEventListener("click", function() {
+            sons.retour.currentTime = 0;
+            sons.retour.play();
+            f.style.display = "none";
+        });
+
+        const barre = f.querySelector("#barre-alaune-liste");
+        let drag = false, sx, sy, sl, st;
+        barre.addEventListener("mousedown", function(e) { drag = true; sx = e.clientX; sy = e.clientY; sl = f.offsetLeft; st = f.offsetTop; });
+        document.addEventListener("mousemove", function(e) { if (!drag) return; f.style.left = (sl + e.clientX - sx) + "px"; f.style.top = (st + e.clientY - sy) + "px"; });
+        document.addEventListener("mouseup", function() { drag = false; });
+
+        alaune.forEach(function(projet) {
+            const carte = document.createElement("div");
+            carte.classList.add("alaune-carte");
+            carte.innerHTML = "<strong>" + projet.titre + "</strong><br>" + projet.artiste;
+            carte.addEventListener("click", function() {
+                sons.clik.currentTime = 0;
+                sons.clik.play();
+                ouvrirFicheAlaune(projet);
+            });
+            f.querySelector("#liste-alaune").appendChild(carte);
+        });
+    }
+    f.style.display = "block";
+    f.classList.remove("fenetre-visible");
+    setTimeout(() => f.classList.add("fenetre-visible"), 10);
+}
 
 document.querySelectorAll(".ref-header").forEach(function(header) {
     header.addEventListener("click", function() {
@@ -487,7 +530,12 @@ document.addEventListener("mouseup", function() {
     isDragging = false;
 });
 
+let navListe = null, navType = null, navIndex = -1;
+
 function ouvrirCarteArtiste(artiste, type) {
+    navType = type;
+    navListe = (type === "beatmaker") ? beatmakers : coverartists;
+    navIndex = navListe.indexOf(artiste);
     let carte = document.getElementById("fenetre-carte-artiste");
     let playerCree = false;
     if (!carte) {
@@ -700,8 +748,8 @@ const membres = {
         role: "Sound design · Production",
         description: "Producteur et designer sonore de Volkcorp. Sélections, prods ambiances et magie sonore.",
         reseaux: { instagram: "itsdie4u" },
-        bouton: "BIENTÔT",
-        action: null
+        bouton: "ENTRER DANS LA MACHINE",
+        action: function() { window.location.href = "itsdie4u.html"; }
     }
 };
 
@@ -978,3 +1026,21 @@ function phraseDefilante() {
 
 phraseDefilante();
 loreDefile.addEventListener("animationiteration", phraseDefilante);
+
+// Navigation clavier ↑ / ↓ entre les profils d'artistes
+document.addEventListener("keydown", function(e) {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    const actif = document.activeElement && document.activeElement.tagName;
+    if (actif === "INPUT" || actif === "TEXTAREA") return;
+    const carte = document.getElementById("fenetre-carte-artiste");
+    if (!carte || carte.style.display === "none" || !navListe) return;
+    e.preventDefault();
+    if (e.key === "ArrowDown") {
+        navIndex = (navIndex + 1) % navListe.length;
+    } else {
+        navIndex = (navIndex - 1 + navListe.length) % navListe.length;
+    }
+    sons.clik.currentTime = 0;
+    sons.clik.play();
+    ouvrirCarteArtiste(navListe[navIndex], navType);
+});
