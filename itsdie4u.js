@@ -8,6 +8,15 @@ const playlist = [
     { titre: "LA PLAGE",   url: "itsdie4u/la_plage.mp3" },
     { titre: "PEUT-ÊTRE",  url: "itsdie4u/peut_etre.mp3" },
     { titre: "PIPIANO",    url: "itsdie4u/pipiano.mp3" },
+    { titre: "CHEH",            url: "itsdie4u/cheh.mp3" },
+    { titre: "EVIL",            url: "itsdie4u/evil.mp3" },
+    { titre: "EZSKALAD",        url: "itsdie4u/ezskalad.mp3" },
+    { titre: "GELATO",          url: "itsdie4u/gelato.mp3" },
+    { titre: "LOPIO",           url: "itsdie4u/lopio.mp3" },
+    { titre: "MARMITON",     url: "itsdie4u/marmiton.mp3" },
+    { titre: "O2LA",            url: "itsdie4u/o2la.mp3" },
+    { titre: "PROCESSUS",       url: "itsdie4u/processus.mp3" },
+    { titre: "WEST COAST SHIT", url: "itsdie4u/west_coast.mp3" },
 ];
 // ============================================================================
 
