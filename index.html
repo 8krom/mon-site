@@ -161,6 +161,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const rtdb = getDatabase(app);
+    let utilisateurActuel = null;
 
     // Compteur total de visites
     const refVisites = ref(rtdb, "compteurVisites");
@@ -241,6 +242,131 @@
         setTimeout(() => f.classList.add("fenetre-visible"), 10);
     };
 
+    // === CHAT GÉNÉRAL ===
+    const refChat = ref(rtdb, "chat");
+    let dernierEnvoiChat = 0;
+    const COOLDOWN_CHAT = 5000;
+
+    window.ouvrirChat = function() {
+        let f = document.getElementById("fenetre-chat");
+        if (!f) {
+            f = document.createElement("div");
+            f.id = "fenetre-chat";
+            f.classList.add("fenetre");
+            f.style.width = "440px";
+            f.style.left = "340px";
+            f.style.top = "150px";
+            f.innerHTML = `
+                <div class="fenetre-barre" id="barre-chat">
+                    <span class="fenetre-titre">Chat — Volkcorp</span>
+                    <div class="fenetre-controls">
+                        <button class="fenetre-fermer-chat">✕</button>
+                    </div>
+                </div>
+                <div class="fenetre-contenu">
+                    <div id="chat-liste"></div>
+                    <div id="chat-form">
+                        <input id="chat-pseudo" type="text" maxlength="20" placeholder="PSEUDO">
+                        <div id="chat-ligne-envoi">
+                            <input id="chat-message" type="text" maxlength="200" placeholder="Ton message...">
+                            <button id="chat-envoyer">›</button>
+                        </div>
+                        <div id="chat-info"></div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(f);
+
+            f.querySelector(".fenetre-fermer-chat").addEventListener("click", () => { f.style.display = "none"; });
+
+            const barre = f.querySelector("#barre-chat");
+            let drag = false, sx, sy, sl, st;
+            barre.addEventListener("mousedown", e => { drag = true; sx = e.clientX; sy = e.clientY; sl = f.offsetLeft; st = f.offsetTop; });
+            document.addEventListener("mousemove", e => { if (!drag) return; f.style.left = (sl + e.clientX - sx) + "px"; f.style.top = (st + e.clientY - sy) + "px"; });
+            document.addEventListener("mouseup", () => drag = false);
+
+            const champPseudo = f.querySelector("#chat-pseudo");
+            const champMsg = f.querySelector("#chat-message");
+            const info = f.querySelector("#chat-info");
+
+            champPseudo.value = localStorage.getItem("volkcorp-chat-pseudo") || "";
+            champPseudo.addEventListener("input", () => { localStorage.setItem("volkcorp-chat-pseudo", champPseudo.value.trim()); });
+
+            function envoyer() {
+                const user = auth.currentUser;
+                console.log("Chat envoi — user:", user);
+                if (!user) {
+                    info.textContent = "⚠ Connecte-toi pour écrire (auth.currentUser est vide).";
+                    return;
+                }
+                const pseudo = champPseudo.value.trim() || "Anonyme";
+                const message = champMsg.value.trim();
+                if (!message) return;
+                const maintenant = Date.now();
+                if (maintenant - dernierEnvoiChat < COOLDOWN_CHAT) {
+                    info.textContent = "⏳ Attends " + Math.ceil((COOLDOWN_CHAT - (maintenant - dernierEnvoiChat)) / 1000) + "s.";
+                    return;
+                }
+                info.textContent = "Envoi...";
+                push(refChat, {
+                    pseudo: pseudo.slice(0, 20),
+                    message: message.slice(0, 200),
+                    uid: user.uid,
+                    email: user.email,
+                    date: maintenant
+                }).then(() => {
+                    console.log("✅ PUSH RÉUSSI dans Firebase");
+                    dernierEnvoiChat = maintenant;
+                    info.textContent = "";
+                    champMsg.value = "";
+                }).catch(err => {
+                    info.textContent = "❌ " + (err.code || "") + " — " + err.message;
+                    console.log("Erreur chat:", err);
+                });
+            }
+
+            f.querySelector("#chat-envoyer").addEventListener("click", envoyer);
+            champMsg.addEventListener("keydown", e => { if (e.key === "Enter") envoyer(); });
+
+            onValue(refChat, (snap) => {
+                const liste = f.querySelector("#chat-liste");
+                const messages = [];
+                snap.forEach((c) => {
+                    const v = c.val() || {};
+                    messages.push({
+                        cle: c.key,
+                        pseudo: v.pseudo || "Anonyme",
+                        message: v.message || "",
+                        date: v.date || 0,
+                        uid: v.uid || ""
+                    });
+                });
+                console.log("Chat lecture — nb messages:", messages.length);
+                messages.sort((a, b) => a.date - b.date);
+                const moi = auth.currentUser ? auth.currentUser.uid : null;
+                let html = "";
+                messages.forEach((m) => {
+                    const h = m.date ? new Date(m.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : "";
+                    const suppr = (moi && m.uid === moi) ? '<span class="chat-suppr" onclick="supprimerMessageChat(\'' + m.cle + '\')">✕</span>' : "";
+                    html += '<div class="chat-msg"><div class="chat-tete"><span class="chat-pseudo">' + echapper(m.pseudo) + '</span><span class="chat-heure">' + h + '</span>' + suppr + '</div><div class="chat-texte">' + echapper(m.message) + '</div></div>';
+                });
+                liste.innerHTML = html || "<p class='chat-vide'>Personne n'a encore parlé.</p>";
+                liste.scrollTop = liste.scrollHeight;
+            }, (err) => {
+                console.log("Erreur lecture chat:", err);
+            });
+        }
+        f.style.display = "block";
+        f.classList.remove("fenetre-visible");
+        setTimeout(() => f.classList.add("fenetre-visible"), 10);
+    };
+
+    window.supprimerMessageChat = function(cle) {
+        if (!auth.currentUser) return;
+        if (!confirm("Effacer ce message ?")) return;
+        set(ref(rtdb, "chat/" + cle), null);
+    };
+
     // Présence : nombre de personnes en ligne
     const refOnline = ref(rtdb, "online");
     const maPresence = push(refOnline);
@@ -284,12 +410,14 @@ async function chargerHistorique(email) {
 }
     onAuthStateChanged(auth, (user) => {
     if (user) {
+        utilisateurActuel = user;
         document.getElementById("auth-connexion").style.display = "none";
         document.getElementById("auth-deconnexion").style.display = "block";
         document.getElementById("auth-status").textContent = "EMPLOYÉ : " + user.email;
         document.getElementById("btn-embauche").textContent = "MON DOSSIER";
         chargerHistorique(user.email);
     } else {
+        utilisateurActuel = null;
         document.getElementById("auth-connexion").style.display = "block";
         document.getElementById("auth-deconnexion").style.display = "none";
         document.getElementById("btn-embauche").textContent = "REJOINDRE VOLKCORP";

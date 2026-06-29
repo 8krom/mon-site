@@ -109,7 +109,7 @@ const bullesData = [
     { nom: "Lecoachhh", lien: "#" },
     { nom: "Partage", lien: "#" },
     { nom: "À la une", lien: "#" },
-    { nom: "?", lien: "#" }
+    { nom: "Chatbox", lien: "#" }
 ];
 
 const centreX = window.innerWidth / 2;
@@ -123,7 +123,7 @@ const bulles = bullesData.map(function(data, i) {
     div.textContent = data.nom;
     let aide = "Clique pour découvrir " + data.nom;
     if (data.nom === "Partage") aide = "Découvre les cover artists et beatmakers du collectif";
-    if (data.nom === "?") aide = "Section à venir...";
+    if (data.nom === "Chatbox") aide = "Le chat général Volkcorp ! — connecte-toi pour discuter";
     if (data.nom === "À la une") aide = "Les projets et sorties mis en avant par le collectif";
     div.setAttribute("data-aide", aide);
     div.addEventListener("mouseenter", function() {
@@ -144,6 +144,8 @@ const bulles = bullesData.map(function(data, i) {
             setTimeout(() => fp.classList.add("fenetre-visible"), 10);
         } else if (data.nom === "À la une") {
             ouvrirAlaune();
+        } else if (data.nom === "Chatbox") {
+            ouvrirChat();
         } else if (membres[data.nom]) {
             ouvrirFenetreMembre(membres[data.nom]);
         }
