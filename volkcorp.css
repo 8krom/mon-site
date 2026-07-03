@@ -795,7 +795,7 @@ body {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 99998;
+    z-index: 200000;
     display: none;
 }
 #crt-overlay.actif {
@@ -1002,7 +1002,7 @@ body {
 }
 #fenetre-chat .chat-msg { font-family: 'Courier New', monospace; }
 #fenetre-chat .chat-tete { display: flex; align-items: center; gap: 8px; font-size: 11px; }
-#fenetre-chat .chat-pseudo { color: #ec911a; letter-spacing: 1px; font-weight: bold; }
+#fenetre-chat .chat-pseudo { letter-spacing: 1px; font-weight: bold; }
 #fenetre-chat .chat-heure { color: #666; }
 #fenetre-chat .chat-suppr { color: #884444; cursor: pointer; margin-left: auto; }
 #fenetre-chat .chat-suppr:hover { color: #ff6666; }
@@ -1020,3 +1020,153 @@ body {
     padding: 0 16px; cursor: pointer; font-size: 18px;
 }
 #fenetre-chat #chat-info { font-size: 11px; color: #d88; margin-top: 5px; min-height: 14px; }
+
+#chat-panneau {
+    position: fixed; top: 50%; right: 0; transform: translateY(-50%);
+    z-index: 500; display: flex; align-items: center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#chat-panneau.ferme { transform: translateY(-50%) translateX(320px); }
+
+/* Bouton rond */
+#chat-toggle {
+    width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0; opacity: 0.8;
+    background: #0a0a0a; border: 1px solid #333; color: #ec911a;
+    font-size: 22px; cursor: pointer; margin-right: -6px; z-index: 2;
+    box-shadow: 0 0 16px rgba(0,0,0,0.6); transition: transform 0.2s, border-color 0.2s;
+}
+#chat-toggle:hover { border-color: #ec911a; transform: scale(1.08); }
+
+/* Le panneau noir arrondi */
+#chat-panneau-inner {
+    width: 320px; height: 460px; background: rgba(10, 10, 10, 0.7);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid #2a2a2a; border-radius: 24px;
+    padding: 16px; display: flex; flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7); overflow: hidden;
+}
+#chat-panneau.ferme #chat-panneau-inner { opacity: 0; pointer-events: none; }
+#chat-panneau-inner { transition: opacity 0.3s; }
+
+#chat-panneau-titre {
+    font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 3px;
+    color: #ec911a; text-align: center; margin-bottom: 12px; flex-shrink: 0;
+}
+
+#chat-liste {
+    flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+    padding-right: 4px; margin-bottom: 10px;
+}
+#chat-liste::-webkit-scrollbar { width: 5px; }
+#chat-liste::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+.chat-msg { font-family: 'Courier New', monospace; }
+.chat-tete { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.chat-pseudo { letter-spacing: 1px; font-weight: bold; }
+.chat-heure { color: #555; }
+.chat-suppr { color: #884444; cursor: pointer; margin-left: auto; }
+.chat-suppr:hover { color: #ff6666; }
+.chat-texte { color: #cfcfcf; font-size: 13px; word-break: break-word; margin-top: 2px; }
+.chat-vide { color: #666; font-size: 12px; text-align: center; padding: 20px; }
+
+#chat-form { flex-shrink: 0; }
+#chat-ligne-envoi { display: flex; gap: 6px; }
+#chat-pseudo { width: 100%; margin-bottom: 6px; }
+#chat-message { flex: 1; }
+#chat-pseudo, #chat-message {
+    background: #161616; border: 1px solid #333; color: #e0e0e0;
+    font-family: 'Courier New', monospace; padding: 8px; font-size: 13px;
+    border-radius: 12px;
+}
+#chat-pseudo:focus, #chat-message:focus { outline: none; border-color: #ec911a; }
+#chat-envoyer {
+    background: #ec911a; color: #0a0a0a; border: none; font-weight: bold;
+    padding: 0 16px; cursor: pointer; font-size: 18px; border-radius: 12px;
+}
+#chat-info { font-size: 11px; color: #d88; margin-top: 5px; min-height: 14px; }
+
+body { overflow-x: hidden; }
+
+/* ===== SYSTÈME D'ARRONDI UNIFIÉ ===== */
+:root {
+    --radius-fenetre: 16px;
+    --radius-bouton: 10px;
+    --radius-petit: 8px;
+}
+
+/* Fenêtres arrondies (coins + barre de titre qui suit) */
+.fenetre {
+    border-radius: var(--radius-fenetre);
+    overflow: hidden; /* pour que la barre épouse les coins arrondis */
+}
+.fenetre-barre {
+    border-top-left-radius: var(--radius-fenetre);
+    border-top-right-radius: var(--radius-fenetre);
+}
+/* Le resize + overflow:hidden ne font pas bon ménage : on garde le contenu scrollable */
+.fenetre-contenu { border-radius: 0 0 var(--radius-fenetre) var(--radius-fenetre); }
+
+.fenetre-controls button {
+    border-radius: 6px;
+    width: 18px;
+    height: 16px;
+    transition: background 0.2s, color 0.2s;
+}
+.fenetre-controls button:hover {
+    background: #ec911a;
+    color: #fff;
+    border-color: #ec911a;
+}
+
+/* ===== BOUTON UNIFIÉ VOLKCORP ===== */
+.btn-volk {
+    background: #1f2020;
+    border: 1px solid #1f2020;
+    color: #c0bdb5;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border-radius: var(--radius-bouton);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+.btn-volk:hover {
+    background: #ec911a;
+    border-color: #ec911a;
+    color: #1f2020;
+}
+.btn-volk:active { transform: scale(0.96); }
+
+/* Arrondi unifié sur les boutons existants */
+#btn-signer, #btn-creer, #btn-google, #btn-quitter,
+#gb-envoyer, .radio-btn, #lien-don, .btn-entrer-membre,
+#notes-envoyer, .alaune-carte {
+    border-radius: var(--radius-bouton);
+}
+.ref-tag { border-radius: var(--radius-petit); }
+#doc-champ input, #gb-nom, #gb-message { border-radius: var(--radius-petit); }
+
+/* Empêcher la sélection de texte partout (feeling "app", pas "page web") */
+body, .fenetre, .bulle, #scene {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* MAIS on garde la sélection possible dans les champs de saisie */
+input, textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+}

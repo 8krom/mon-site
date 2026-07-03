@@ -26,6 +26,15 @@ sons.hover.forEach(s => s.volume = 0.2);
 sons.clik.volume = 0.3;
 sons.retour.volume = 0.3;
 
+// Si l'intro a déjà été jouée dans cette session, on la saute direct
+if (sessionStorage.getItem("volkcorp-intro-vue")) {
+    const intro = document.getElementById("intro-screen");
+    if (intro) intro.style.display = "none";
+    const bios = document.getElementById("bios-screen");
+    if (bios) bios.style.display = "none";
+    sons.fond.play().catch(() => {});
+}
+
 let demarrageOk = false;
 document.getElementById("intro-screen").addEventListener("click", function() {
     if (demarrageOk) return;
@@ -85,6 +94,7 @@ document.getElementById("intro-screen").addEventListener("click", function() {
         let i = 0;
         function etapeSuivante() {
             if (i >= etapes.length) {
+                sessionStorage.setItem("volkcorp-intro-vue", "1");
                 intro.style.opacity = "0";
                 setTimeout(() => {
                     intro.style.display = "none";
@@ -109,7 +119,6 @@ const bullesData = [
     { nom: "Lecoachhh", lien: "#" },
     { nom: "Partage", lien: "#" },
     { nom: "À la une", lien: "#" },
-    { nom: "Chatbox", lien: "#" }
 ];
 
 const centreX = window.innerWidth / 2;
@@ -618,8 +627,13 @@ contenu.innerHTML = `
         <div style="font-size:16px; letter-spacing:3px; text-transform:uppercase; color:#1f2020;">${artiste.pseudo}</div>
         <div style="font-size:13px; letter-spacing:3px; color:#808080; text-transform:uppercase; margin-top:4px;">Style</div>
         <div style="font-size:15px; letter-spacing:2px; color:#ec911a;">${artiste.style}</div>
-        <div style="font-size:13px; letter-spacing:3px; color:#808080; text-transform:uppercase; margin-top:4px;">Description</div>
-        <div style="font-size:15px; letter-spacing:1px; color:#808080; line-height:1.6;">${artiste.description}</div>
+        <div style="font-size:13px; letter-spacing:3px; color:#808080; text-transform:uppercase; margin-top:4px;">Notes</div>
+        <div id="notes-liste" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; margin-bottom:8px;"></div>
+        <div id="notes-form" style="display:flex; flex-direction:column; gap:6px;">
+            <textarea id="notes-texte" maxlength="300" placeholder="Laisse une note..." style="background:#161616; border:1px solid #444; color:#e0e0e0; font-family:'Courier New',monospace; padding:7px; font-size:12px; border-radius:10px; resize:none; height:50px;"></textarea>
+            <button id="notes-envoyer" style="background:#ec911a; color:#1f2020; border:none; font-family:'Courier New',monospace; font-weight:bold; font-size:10px; letter-spacing:2px; padding:8px; cursor:pointer; border-radius:10px; text-transform:uppercase;">Poster</button>
+            <div id="notes-info" style="font-size:10px; color:#d88; min-height:12px;"></div>
+        </div>
         <div style="font-size:13px; letter-spacing:3px; color:#808080; text-transform:uppercase; margin-top:4px;">Réseaux</div>
         <div style="font-size:15px; letter-spacing:2px; color:#404040;">
             ${artiste.reseaux.instagram ? `<a href="https://instagram.com/${artiste.reseaux.instagram}" target="_blank" style="color:#ec911a; text-decoration:none;">@${artiste.reseaux.instagram}</a>` : ""}
@@ -666,6 +680,52 @@ contenu.innerHTML = `
     }
     creerPlayer();
 }
+// === NOTES ===
+    if (window.notesAPI) {
+        const pseudoArtiste = artiste.pseudo.replace(/[.#$\[\]/]/g, "_"); // clés Firebase safe
+        const listeNotes = carte.querySelector("#notes-liste");
+        const champNote = carte.querySelector("#notes-texte");
+        const btnNote = carte.querySelector("#notes-envoyer");
+        const infoNote = carte.querySelector("#notes-info");
+
+        if (carte._desabonnerNotes) carte._desabonnerNotes();
+
+        btnNote.onclick = function() {
+            const txt = champNote.value.trim();
+            if (!txt) return;
+            infoNote.textContent = "Envoi...";
+            window.notesAPI.poster(pseudoArtiste, txt)
+                .then(() => { champNote.value = ""; infoNote.textContent = ""; })
+                .catch(() => { infoNote.textContent = "⚠ Connecte-toi pour poster."; });
+        };
+
+        function couleurP(nom) {
+            let h = 0;
+            for (let i = 0; i < nom.length; i++) h = nom.charCodeAt(i) + ((h << 5) - h);
+            return "hsl(" + (Math.abs(h) % 360) + ", 70%, 55%)";
+        }
+
+        carte._desabonnerNotes = window.notesAPI.ecouter(pseudoArtiste, function(notes) {
+            const moi = window.notesAPI.moiUID();
+            notes.sort((a, b) => (a.date || 0) - (b.date || 0));
+            let html = "";
+            notes.forEach((n) => {
+                const likes = n.likes || {};
+                const nbLikes = Object.keys(likes).length;
+                const jaimeDeja = moi && likes[moi];
+                const suppr = (moi && n.uid === moi)
+                    ? `<span onclick="window.supprimerNote('${pseudoArtiste}','${n.cle}')" style="color:#884444; cursor:pointer; margin-left:6px;">✕</span>` : "";
+                html += `<div style="border-bottom:1px solid #2a2a2a; padding-bottom:6px;">
+                    <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+                        <span style="color:${couleurP(n.pseudo || "?")}; font-weight:bold;">${n.pseudo || "?"}</span>${suppr}
+                    </div>
+                    <div style="font-size:12px; color:#404040; line-height:1.5; margin:3px 0;">${(n.texte || "").replace(/</g, "&lt;")}</div>
+                    <span onclick="window.likerNote('${pseudoArtiste}','${n.cle}',${jaimeDeja ? "true" : "false"})" style="cursor:pointer; font-size:11px; color:${jaimeDeja ? "#ec911a" : "#808080"};">❤ ${nbLikes}</span>
+                </div>`;
+            });
+            listeNotes.innerHTML = html || "<p style='font-size:11px; color:#808080;'>Aucune note. Sois le premier !</p>";
+        });
+    }
 }
 
 function ouvrirFicheAlaune(projet) {
@@ -1005,12 +1065,6 @@ document.addEventListener("mouseout", function(e) {
     }
 });
 
-document.getElementById("crt-toggle").addEventListener("click", function() {
-    sons.clik.currentTime = 0;
-    sons.clik.play();
-    document.getElementById("crt-overlay").classList.toggle("actif");
-});
-
 const phrases = [
     "VOLKCORP — DEPUIS LE MARÉCAGE",
     "Astuce : clique sur Lecoachhh pour ouvrir la radio",
@@ -1046,3 +1100,11 @@ document.addEventListener("keydown", function(e) {
     sons.clik.play();
     ouvrirCarteArtiste(navListe[navIndex], navType);
 });
+
+window.supprimerNote = function(pseudoArtiste, cle) {
+    if (!confirm("Effacer cette note ?")) return;
+    window.notesAPI.supprimer(pseudoArtiste, cle);
+};
+window.likerNote = function(pseudoArtiste, cle, dejaLike) {
+    window.notesAPI.toggleLike(pseudoArtiste, cle, dejaLike).catch(() => {});
+};
