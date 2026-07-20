@@ -117,7 +117,7 @@ const bullesData = [
     { nom: "8krom", lien: "8krom.html" },
     { nom: "Itsdie4u", lien: "itsdie4u.html" },
     { nom: "Lecoachhh", lien: "#" },
-    { nom: "Partage", lien: "#" },
+    { nom: "Almanach", lien: "#" },
     { nom: "À la une", lien: "#" },
 ];
 
@@ -131,7 +131,7 @@ const bulles = bullesData.map(function(data, i) {
     div.classList.add("bulle");
     div.textContent = data.nom;
     let aide = "Clique pour découvrir " + data.nom;
-    if (data.nom === "Partage") aide = "Découvre les cover artists et beatmakers du collectif";
+    if (data.nom === "Almanach") aide = "Découvre les cover artists et beatmakers du collectif";
     if (data.nom === "Chatbox") aide = "Le chat général Volkcorp ! — connecte-toi pour discuter";
     if (data.nom === "À la une") aide = "Les projets et sorties mis en avant par le collectif";
     div.setAttribute("data-aide", aide);
@@ -146,7 +146,7 @@ const bulles = bullesData.map(function(data, i) {
         bullSon.currentTime = 0;
         bullSon.play();
 
-        if (data.nom === "Partage") {
+        if (data.nom === "Almanach") {
             const fp = document.getElementById("fenetre-partage");
             fp.style.display = "block";
             fp.classList.remove("fenetre-visible");
@@ -285,97 +285,817 @@ const coverartists = [
 ];
 
 const beatmakers = [
-    { pseudo: "riversek", style: "crazy bouncy", description: "J'ai découvert grâce à Dialryckx, sur le morceau Marrgiela puis Circus flow m'a fait comprendre que je devais aller voir le profil et je n'est pas était déçu ! J'aime trop ses 808 grasses mélangé à des ambiances céleste vraiment j'adore !", reseaux: { instagram: "riverseksek" }, liens: [{ label: "YouTube", url: "https://www.youtube.com/@riverseksek/videos" }], youtube_id: "zyhI5Zhb3rc" },
-    { pseudo: "fillette.318", style: "", description: "", reseaux: { instagram: "fillette.318" }, liens: [], youtube_id: "" },
-    { pseudo: "prodpmoneee", style: "", description: "", reseaux: { instagram: "prodpmoneee" }, liens: [], youtube_id: "" },
-    { pseudo: "prod.5petsnazgdz", style: "", description: "", reseaux: { instagram: "prod.5petsnazgdz" }, liens: [], youtube_id: "" },
-    { pseudo: "countlittfroy", style: "", description: "", reseaux: { instagram: "countlittfroy" }, liens: [], youtube_id: "" },
-    { pseudo: "yxngwaga", style: "", description: "", reseaux: { instagram: "yxngwaga" }, liens: [], youtube_id: "" },
-    { pseudo: "noautospaz", style: "", description: "", reseaux: { instagram: "noautospaz" }, liens: [], youtube_id: "" },
-    { pseudo: "ncxtzxstr1", style: "", description: "", reseaux: { instagram: "ncxtzxstr1" }, liens: [], youtube_id: "" },
-    { pseudo: "ninagen", style: "", description: "", reseaux: { instagram: "ninagen" }, liens: [], youtube_id: "" },
-    { pseudo: "flatoutflatoutflatout", style: "", description: "", reseaux: { instagram: "flatoutflatoutflatout" }, liens: [], youtube_id: "" },
-    { pseudo: "lonelaflare", style: "", description: "", reseaux: { instagram: "lonelaflare" }, liens: [], youtube_id: "" },
-    { pseudo: "whyfiveee", style: "", description: "", reseaux: { instagram: "whyfiveee" }, liens: [], youtube_id: "" },
-    { pseudo: "prodkip", style: "", description: "", reseaux: { instagram: "prodkip" }, liens: [], youtube_id: "" },
-    { pseudo: "gen6", style: "", description: "", reseaux: { instagram: "gen6" }, liens: [], youtube_id: "" },
-    { pseudo: "chirurgyyy", style: "", description: "", reseaux: { instagram: "chirurgyyy" }, liens: [], youtube_id: "" },
-    { pseudo: "1ballonboy", style: "", description: "", reseaux: { instagram: "1ballonboy" }, liens: [], youtube_id: "" },
-    { pseudo: "mercizealest", style: "", description: "", reseaux: { instagram: "mercizealest" }, liens: [], youtube_id: "" },
-    { pseudo: "esabekayoe", style: "", description: "", reseaux: { instagram: "esabekayoe" }, liens: [], youtube_id: "" },
-    { pseudo: "1yungvalentino", style: "", description: "", reseaux: { instagram: "1yungvalentino" }, liens: [], youtube_id: "" },
-    { pseudo: "slym3typhoon", style: "", description: "", reseaux: { instagram: "slym3typhoon" }, liens: [], youtube_id: "" },
-    { pseudo: "blkoloup", style: "", description: "", reseaux: { instagram: "blkoloup" }, liens: [], youtube_id: "" },
-    { pseudo: "prodjudah", style: "", description: "", reseaux: { instagram: "prodjudah" }, liens: [], youtube_id: "" },
-    { pseudo: "prodwexszn", style: "", description: "", reseaux: { instagram: "prodwexszn" }, liens: [], youtube_id: "" },
-    { pseudo: "ffolio", style: "", description: "", reseaux: { instagram: "ffolio" }, liens: [], youtube_id: "" },
-    { pseudo: "yannoski_3", style: "", description: "", reseaux: { instagram: "yannoski_3" }, liens: [], youtube_id: "" },
-    { pseudo: "sylvan_dekens", style: "", description: "", reseaux: { instagram: "sylvan_dekens" }, liens: [], youtube_id: "" },
-    { pseudo: "perc40", style: "", description: "", reseaux: { instagram: "perc40" }, liens: [], youtube_id: "" },
-    { pseudo: "yungstxxzy", style: "", description: "", reseaux: { instagram: "yungstxxzy" }, liens: [], youtube_id: "" },
-    { pseudo: "glozula", style: "", description: "", reseaux: { instagram: "glozula" }, liens: [], youtube_id: "" },
-    { pseudo: "stabneez", style: "", description: "", reseaux: { instagram: "stabneez" }, liens: [], youtube_id: "" },
-    { pseudo: "itz36", style: "", description: "", reseaux: { instagram: "itz36" }, liens: [], youtube_id: "" },
-    { pseudo: "bricksy2x", style: "", description: "", reseaux: { instagram: "bricksy2x" }, liens: [], youtube_id: "" },
-    { pseudo: "medams.mp3", style: "", description: "", reseaux: { instagram: "medams.mp3" }, liens: [], youtube_id: "" },
-    { pseudo: "nyli2b", style: "", description: "", reseaux: { instagram: "nyli2b" }, liens: [], youtube_id: "" },
-    { pseudo: "fuckkashemir", style: "", description: "", reseaux: { instagram: "fuckkashemir" }, liens: [], youtube_id: "" },
-    { pseudo: "1percshawty", style: "", description: "", reseaux: { instagram: "1percshawty" }, liens: [], youtube_id: "" },
-    { pseudo: "_1paymels_", style: "", description: "", reseaux: { instagram: "_1paymels_" }, liens: [], youtube_id: "" },
-    { pseudo: "milanezie", style: "", description: "", reseaux: { instagram: "milanezie" }, liens: [], youtube_id: "" },
-    { pseudo: "ttdafool", style: "", description: "", reseaux: { instagram: "ttdafool" }, liens: [], youtube_id: "" },
-    { pseudo: "jus8x", style: "", description: "", reseaux: { instagram: "jus8x" }, liens: [], youtube_id: "" },
-    { pseudo: "prod.oxead", style: "", description: "", reseaux: { instagram: "prod.oxead" }, liens: [], youtube_id: "" },
-    { pseudo: "xantosbeatz", style: "", description: "", reseaux: { instagram: "xantosbeatz" }, liens: [], youtube_id: "" },
-    { pseudo: "pes020k", style: "", description: "", reseaux: { instagram: "pes020k" }, liens: [], youtube_id: "" },
-    { pseudo: "_v900_", style: "", description: "", reseaux: { instagram: "_v900_" }, liens: [], youtube_id: "" },
-    { pseudo: "tay20k", style: "", description: "", reseaux: { instagram: "tay20k" }, liens: [], youtube_id: "" },
-    { pseudo: "1deejaysammy", style: "", description: "", reseaux: { instagram: "1deejaysammy" }, liens: [], youtube_id: "" },
-    { pseudo: "mexikodro", style: "", description: "", reseaux: { instagram: "mexikodro" }, liens: [], youtube_id: "" },
-    { pseudo: "zaytoven", style: "", description: "", reseaux: { instagram: "zaytoven" }, liens: [], youtube_id: "" },
-    { pseudo: "dbglokk", style: "", description: "", reseaux: { instagram: "dbglokk" }, liens: [], youtube_id: "" },
-    { pseudo: "1freaky", style: "", description: "", reseaux: { instagram: "1freaky" }, liens: [], youtube_id: "" },
-    { pseudo: "mag.nis", style: "", description: "", reseaux: { instagram: "mag.nis" }, liens: [], youtube_id: "" },
-    { pseudo: "xemarax", style: "", description: "", reseaux: { instagram: "xemarax" }, liens: [], youtube_id: "" },
-    { pseudo: "prodhh", style: "", description: "", reseaux: { instagram: "prodhh" }, liens: [], youtube_id: "" },
-    { pseudo: "20xx_01", style: "", description: "", reseaux: { instagram: "20xx_01" }, liens: [], youtube_id: "" },
-    { pseudo: "leshee___", style: "", description: "", reseaux: { instagram: "leshee___" }, liens: [], youtube_id: "" },
-    { pseudo: "aghstt", style: "", description: "", reseaux: { instagram: "aghstt" }, liens: [], youtube_id: "" },
-    { pseudo: "sytruzbeats", style: "", description: "", reseaux: { instagram: "sytruzbeats" }, liens: [], youtube_id: "" },
-    { pseudo: "evilgiane", style: "", description: "", reseaux: { instagram: "evilgiane" }, liens: [], youtube_id: "" },
-    { pseudo: "stoopidxool", style: "", description: "", reseaux: { instagram: "stoopidxool" }, liens: [], youtube_id: "" },
-    { pseudo: "lilskamx", style: "", description: "", reseaux: { instagram: "lilskamx" }, liens: [], youtube_id: "" },
-    { pseudo: "gspmain", style: "", description: "", reseaux: { instagram: "gspmain" }, liens: [], youtube_id: "" },
-    { pseudo: "cashcache", style: "", description: "", reseaux: { instagram: "cashcache" }, liens: [], youtube_id: "" },
-    { pseudo: "sxprano", style: "", description: "", reseaux: { instagram: "sxprano" }, liens: [], youtube_id: "" },
-    { pseudo: "1globalk", style: "", description: "", reseaux: { instagram: "1globalk" }, liens: [], youtube_id: "" },
-    { pseudo: "shxytsu", style: "", description: "", reseaux: { instagram: "shxytsu" }, liens: [], youtube_id: "" },
-    { pseudo: "1ksensai", style: "", description: "", reseaux: { instagram: "1ksensai" }, liens: [], youtube_id: "" },
-    { pseudo: "13thall_", style: "", description: "", reseaux: { instagram: "13thall_" }, liens: [], youtube_id: "" },
-    { pseudo: "prodkanser", style: "", description: "", reseaux: { instagram: "prodkanser" }, liens: [], youtube_id: "" },
-    { pseudo: "6pa___", style: "", description: "", reseaux: { instagram: "6pa___" }, liens: [], youtube_id: "" },
-    { pseudo: "1prodbytn", style: "", description: "", reseaux: { instagram: "1prodbytn" }, liens: [], youtube_id: "" },
-    { pseudo: "emcccee", style: "", description: "", reseaux: { instagram: "emcccee" }, liens: [], youtube_id: "" },
-    { pseudo: "c4000plug", style: "", description: "", reseaux: { instagram: "c4000plug" }, liens: [], youtube_id: "" },
-    { pseudo: "gustavio_topman", style: "", description: "", reseaux: { instagram: "gustavio_topman" }, liens: [], youtube_id: "" },
-    { pseudo: "prodkache", style: "", description: "", reseaux: { instagram: "prodkache" }, liens: [], youtube_id: "" },
-    { pseudo: "prod.r888", style: "", description: "", reseaux: { instagram: "prod.r888" }, liens: [], youtube_id: "" },
-    { pseudo: "1demna", style: "", description: "", reseaux: { instagram: "1demna" }, liens: [], youtube_id: "" },
-    { pseudo: "fenka213", style: "", description: "", reseaux: { instagram: "fenka213" }, liens: [], youtube_id: "" },
-    { pseudo: "1terror", style: "", description: "", reseaux: { instagram: "1terror" }, liens: [], youtube_id: "" },
-    { pseudo: "prodby.014", style: "", description: "", reseaux: { instagram: "prodby.014" }, liens: [], youtube_id: "" },
-    { pseudo: "gapebrazy", style: "", description: "", reseaux: { instagram: "gapebrazy" }, liens: [], youtube_id: "" },
-    { pseudo: "djcodeinwar", style: "", description: "", reseaux: { instagram: "djcodeinwar" }, liens: [], youtube_id: "" },
-    { pseudo: "used2that", style: "", description: "", reseaux: { instagram: "used2that" }, liens: [], youtube_id: "" },
-    { pseudo: "nathanroyt_roy", style: "", description: "", reseaux: { instagram: "nathanroyt_roy" }, liens: [], youtube_id: "" },
-    { pseudo: "1voido", style: "", description: "", reseaux: { instagram: "1voido" }, liens: [], youtube_id: "" },
-    { pseudo: "kamanugue", style: "", description: "", reseaux: { instagram: "kamanugue" }, liens: [], youtube_id: "" },
-    { pseudo: "vlash4ever", style: "", description: "", reseaux: { instagram: "vlash4ever" }, liens: [], youtube_id: "" },
-    { pseudo: "444.jet", style: "", description: "", reseaux: { instagram: "444.jet" }, liens: [], youtube_id: "" },
-    { pseudo: "cruwiththe2", style: "", description: "", reseaux: { instagram: "cruwiththe2" }, liens: [], youtube_id: "" },
-    { pseudo: "407krxxk", style: "", description: "", reseaux: { instagram: "407krxxk" }, liens: [], youtube_id: "" },
-    { pseudo: "louisbrodinski", style: "", description: "", reseaux: { instagram: "louisbrodinski" }, liens: [], youtube_id: "" }
+    {
+        pseudo: "riversek",
+        style: "crazy bouncy",
+        description: "J'ai découvert grâce à Dialryckx, sur le morceau Marrgiela puis Circus flow m'a fait comprendre que je devais aller voir le profil et je n'est pas était déçu ! J'aime trop ses 808 grasses mélangé à des ambiances céleste vraiment j'adore !",
+        reseaux: { instagram: "riverseksek" },
+        liens: [
+            { label: "YouTube", url: "https://www.youtube.com/@riverseksek/videos" }
+        ],
+        youtube_id: "zyhI5Zhb3rc"
+    },
+    {
+        pseudo: "fillette.318",
+        style: "",
+        description: "",
+        reseaux: { instagram: "fillette.318" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/gOr21QGihbucLOde8e" }
+        ],
+        youtube_id: "6n0DERExFV8"
+    },
+    {
+        pseudo: "prodpmoneee",
+        style: "",
+        description: "",
+        reseaux: { instagram: "prodpmoneee" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/fiELPJUUddlvAZbLvh" }
+        ],
+        youtube_id: "hn7PBvc_3RQ"
+    },
+
+    {
+        pseudo: "prod.5petsnazgdz",
+        style: "",
+        description: "",
+        reseaux: { instagram: "prod.spetsnazgdz" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/GaKuIUkaB1FkIQ6PKp" }
+        ],
+        youtube_id: "XX_Ckg-PEXs"
+    },
+    {
+        pseudo: "countlittfroy",
+        style: "",
+        description: "",
+        reseaux: { instagram: "countlittfroy" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/pOzRA8sJHzSLpHij0c" }
+        ],
+        youtube_id: "Cls9gpTrBUM"
+    },
+    {
+        pseudo: "yxngwaga",
+        style: "",
+        description: "",
+        reseaux: { instagram: "yxngwaga" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/fqOUTMoYaXjZmMGvsh" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "noautospaz",
+        style: "",
+        description: "",
+        reseaux: { instagram: "noautospaz" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/MBklhDSSpL9BI3PkrH" }
+        ],
+        youtube_id: "_5mQyR0vg-w"
+    },
+    {
+        pseudo: "ncxtzxstr1",
+        style: "",
+        description: "",
+        reseaux: { instagram: "ncxtzxstrv" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/C69Lx7WKp2LBuznRZ1" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "ninagen",
+        style: "",
+        description: "",
+        reseaux: { instagram: "ninagen" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/HRlhpBVRxjBXZvfbRF" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "flatoutflatoutflatout",
+        style: "",
+        description: "",
+        reseaux: { instagram: "flatoutflatoutflatout" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/wD0UQz707q6xsYY6wW" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "lonelaflare",
+        style: "",
+        description: "",
+        reseaux: { instagram: "lonelaflare" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/nz52hSiHuKirbg9dhs" }
+        ],
+        youtube_id: "DI9JyJw8Co8"
+    },
+    {
+        pseudo: "whyfiveee",
+        style: "",
+        description: "",
+        reseaux: { instagram: "whyfiveee" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/sl1MhCeYI0lq7UfMoD" }
+        ],
+        youtube_id: "IsDAuiP_0vA"
+    },
+    {
+        pseudo: "prodkip",
+        style: "",
+        description: "",
+        reseaux: { instagram: "prodkip" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/OA2bfEOraOsWAjs0Xn" }
+        ],
+        youtube_id: "YVqzkaJ4d7U"
+    },
+    {
+        pseudo: "gen6",
+        style: "",
+        description: "",
+        reseaux: { instagram: "gen6" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/jBLXONMiyjbzZ9rHaf" }
+        ],
+        youtube_id: "w9n95taBonw"
+    },
+    {
+        pseudo: "chirurgyyy",
+        style: "",
+        description: "",
+        reseaux: { instagram: "chirurgyyy" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/lt2bI9f6qHaz3O0mo8" }
+        ],
+        youtube_id: "21no5DsgQa0"
+    },
+    {
+        pseudo: "1ballonboy",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1ballonboyz" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/muAz2wZirtxS1YLrfB" }
+        ],
+        youtube_id: "GCHJMmvAiAo"
+    },
+    {
+        pseudo: "mercizealest",
+        style: "",
+        description: "",
+        reseaux: { instagram: "mercizealest" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/OnKUFZ9btZdSiSUfhq" }
+        ],
+        youtube_id: "xdytQCOjtMQ"
+    },
+    {
+        pseudo: "esabekayoe",
+        style: "#grotesque",
+        description: "",
+        reseaux: { instagram: "esabekayoe" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/ne4Qs66eGfDVKHtNr4" }
+        ],
+        youtube_id: "aUE2d7c9tX0"
+    },
+    {
+        pseudo: "1yungvalentino",
+        style: "#bringbacktheplugg",
+        description: "",
+        reseaux: { instagram: "1yungvalentino" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/O7ystL0VsEkQ1pBzaT" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "slym3typhoon",
+        style: "",
+        description: "",
+        reseaux: { instagram: "slym3typhoon" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/wxkZ97uF739J9nigcT" }
+        ],
+        youtube_id: "ivxXsLPGKEQ"
+    },
+    {
+        pseudo: "blkoloup",
+        style: "",
+        description: "",
+        reseaux: { instagram: "blkoloup" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/M6IJaoSaz8462PYbxP" }
+        ],
+        youtube_id: "tGECwx4h3ro"
+    },
+    {
+        pseudo: "prodjudah",
+        style: "",
+        description: "",
+        reseaux: { instagram: "prodjudah" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/fnQXFfgwrnedAimcu9" }
+        ],
+        youtube_id: "YS_a9hc5Uxs"
+    },
+    {
+        pseudo: "prodwexszn",
+        style: "#plugg #dream",
+        description: "",
+        reseaux: { instagram: "prodwexszn" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/W9FdAP6axt9NpOohNn" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "ffolio",
+        style: "",
+        description: "",
+        reseaux: { instagram: "ffolio" },
+        liens: [],
+        youtube_id: "92kEGf-1P6M"
+    },
+    {
+        pseudo: "yannoski_3",
+        style: "",
+        description: "",
+        reseaux: { instagram: "yannoski_3" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/eFUpzrCnoS6cOgsmOv" }
+        ],
+        youtube_id: "wt50TPjw-4o"
+    },
+    {
+        pseudo: "sylvan_dekens",
+        style: "",
+        description: "",
+        reseaux: { instagram: "sylvan_dekens" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/xlDylEtf0jRdWcrlRV" }
+        ],
+        youtube_id: "c67yj-TLRZc"
+    },
+    {
+        pseudo: "perc40",
+        style: "",
+        description: "",
+        reseaux: { instagram: "perc40" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/v8OghOFRBfyzzf92r5" }
+        ],
+        youtube_id: "gdhizEJIXr8"
+    },
+    {
+        pseudo: "yungstxxzy",
+        style: "",
+        description: "",
+        reseaux: { instagram: "yungstxxzy" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/nYYuRm4SB1Hc11UG9p" }
+        ],
+        youtube_id: "F7wimb7WyY4"
+    },
+    {
+        pseudo: "glozula",
+        style: "",
+        description: "",
+        reseaux: { instagram: "glozula" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/amHoqStEvOzKr14nms" }
+        ],
+        youtube_id: "ZxviregNPTg"
+    },
+    {
+        pseudo: "stabneez",
+        style: "",
+        description: "",
+        reseaux: { instagram: "stabneez" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/qZFqDLT9LXU1uZMBX6" }
+        ],
+        youtube_id: "RBiLH9F5zUI"
+    },
+    {
+        pseudo: "itz3g",
+        style: "",
+        description: "",
+        reseaux: { instagram: "itz3g" },
+        liens: [],
+        youtube_id: "4Ini1xH-TGc"
+    },
+    {
+        pseudo: "bricksy2x",
+        style: "",
+        description: "",
+        reseaux: { instagram: "bricksy2x" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/pyzFVlYoWBMftidxGS" }
+        ],
+        youtube_id: "UNdWQveqK7Q"
+    },
+    {
+        pseudo: "medams.mp3",
+        style: "",
+        description: "",
+        reseaux: { instagram: "medams.mp3" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/16cqC74uKnpfAlx0AN" }
+        ],
+        youtube_id: "Ndsa3ZdoJmM"
+    },
+    {
+        pseudo: "nyli2b",
+        style: "",
+        description: "",
+        reseaux: { instagram: "nyli2b" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/XK5QmnIGYyw9rj9L6U" }
+        ],
+        youtube_id: "wF2TtmRiKkE"
+    },
+    {
+        pseudo: "fuckkashemir",
+        style: "",
+        description: "",
+        reseaux: { instagram: "fuckkashemir" },
+        liens: [],
+        youtube_id: "r0w20aHrlCA"
+    },
+    {
+        pseudo: "1percshawty",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1percshawty" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/4RCLlEyAAmxExeqauL" }
+        ],
+        youtube_id: "https://www.youtube.com/live/5DH9Tv0DNjg?si=AbHnx7z6F_XUTBjq"
+    },
+    {
+        pseudo: "_1paymels_",
+        style: "",
+        description: "",
+        reseaux: { instagram: "_1paymels_" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/qPBEFNn4Gyi00xm1ec" }
+        ],
+        youtube_id: "5vQGSZn31Y8"
+    },
+    {
+        pseudo: "milanezie",
+        style: "",
+        description: "",
+        reseaux: { instagram: "milanezie" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/qaELwncT6EBqK5GgIm" }
+        ],
+        youtube_id: "nGycKEMh4M8"
+    },
+    {
+        pseudo: "ttdafool",
+        style: "",
+        description: "",
+        reseaux: { instagram: "ttdafool" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/CQJE4cmlnfhCdZt7BM" }
+        ],
+        youtube_id: "WbK-jbXZRps"
+    },
+    {
+        pseudo: "jus8x",
+        style: "",
+        description: "",
+        reseaux: { instagram: "jus8x" },
+        youtube_id: "oo-M-CovAxo",
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/3ACLl6GNrBsdR1ywll" }
+        ]
+    },
+    {
+        pseudo: "prod.oxead",
+        style: "",
+        description: "",
+        reseaux: { instagram: "prod.oxead" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/iP1gKiJLGBXMJl8yfD" }
+        ],
+        youtube_id: "BFtIg14tthc"
+    },
+    {
+        pseudo: "xantosbeatz",
+        style: "",
+        description: "",
+        reseaux: { instagram: "xantosbeatz" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/qEEto411oB5mLqxB2j" }
+        ],
+        youtube_id: "d8NzdowM9lE"
+    },
+    {
+        pseudo: "pes020k",
+        style: "",
+        description: "",
+        reseaux: { instagram: "pes020k" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/DqUZFFq0DaeoEPTQ0M" }
+        ],
+        youtube_id: "CCLTZboRPXE"
+    },
+    {
+        pseudo: "_v900_",
+        style: "",
+        description: "",
+        reseaux: { instagram: "_v900_" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/PC5oPv2gH5wMgTwQiz" }
+        ],
+        youtube_id: "wauCALQihos"
+    },
+    {
+        pseudo: "tay20k",
+        style: "",
+        description: "",
+        reseaux: { instagram: "tay20k" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/558YFSNlusC80sDdFn" }
+        ],
+        youtube_id: "9l4tHZO1KXM"
+    },
+    {
+        pseudo: "1deejaysammy",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1deejaysammy" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/FS2WH9mXnTnVFkzyIP" }
+        ],
+        youtube_id: "1_7__HNa2Fk"
+    },
+    {
+        pseudo: "dbglokk",
+        style: "",
+        description: "",
+        reseaux: { instagram: "dbglokk" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/3Mp6uuwubxPYk8mfxF" }
+        ],
+        youtube_id: "LLAvYG-m1Pk"
+    },
+    {
+        pseudo: "mag.nis",
+        style: "",
+        description: "",
+        reseaux: { instagram: "mag.nis" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/NUbDOXxwC57TzxTfPg" }
+        ],
+        youtube_id: "jCbTuAoibFc"
+    },
+    {
+        pseudo: "xemarax",
+        style: "",
+        description: "",
+        reseaux: { instagram: "xemarax" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/jSkXffS9ypp9grxEKB" }
+        ],
+        youtube_id: "_pEg0NaaNVo"
+    },
+    {
+        pseudo: "mh",
+        style: "",
+        description: "",
+        reseaux: { instagram: "mh" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/SQzHhkw8hUWU4YQ4tk" }
+        ],
+        youtube_id: "JOGjyvLTLFo"
+    },
+    {
+        pseudo: "20xx_01",
+        style: "",
+        description: "",
+        reseaux: { instagram: "20xx_01" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/JgE59UHrXXvWuF8g4T" }
+        ],
+        youtube_id: "Lq-nBtQ_S-w"
+    },
+    {
+        pseudo: "leshee___",
+        style: "",
+        description: "",
+        reseaux: { instagram: "leshee___" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/YlmSW8m3jdYj6MHnxR" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "aghstt",
+        style: "",
+        description: "",
+        reseaux: { instagram: "aghstt" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/S4LvbJpWU0vp2Xq5Zd" }
+        ],
+        youtube_id: "vna9kGlSEJM"
+    },
+    {
+        pseudo: "sytruzbeats",
+        style: "",
+        description: "",
+        reseaux: { instagram: "sytruzbeats" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/5Ex1Z8PXwthwmWMEXv" }
+        ],
+        youtube_id: "jhZBF61ljiY"
+    },
+    {
+        pseudo: "evilgiane",
+        style: "",
+        description: "",
+        reseaux: { instagram: "evilgiane" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/1JRLrDZshAsIwmKW88" }
+        ],
+        youtube_id: "2dhSDgdt53I"
+    },
+    {
+        pseudo: "stoopidxool",
+        style: "",
+        description: "",
+        reseaux: { instagram: "stoopidxool" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/MS7yBDQtB0i5iPBvk5" }
+        ],
+        youtube_id: "iGg6_v6vEjE"
+    },
+    {
+        pseudo: "lilskamx",
+        style: "",
+        description: "",
+        reseaux: { instagram: "lilskamx" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/h5yTaNlHNifpMTa8IE" }
+        ],
+        youtube_id: "XB8LQhQz0V8"
+    },
+    {
+        pseudo: "gspmain",
+        style: "",
+        description: "",
+        reseaux: { instagram: "gspmain" },
+        liens: [],
+        youtube_id: ""
+    },
+    {
+        pseudo: "cashcache",
+        style: "",
+        description: "",
+        reseaux: { instagram: "cashcache" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/AQCMSoHFh5SttpY0TR" }
+        ],
+        youtube_id: "NgCXRfprzN4"
+    },
+    {
+        pseudo: "sxprano",
+        style: "",
+        description: "",
+        reseaux: { instagram: "sxprano" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/ATkPjGcGtrO6D4VPsL" }
+        ],
+        youtube_id: "oskHE8aqGvE"
+    },
+    {
+        pseudo: "1globalk",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1globalk" },
+        liens: [],
+        youtube_id: ""
+    },
+    {
+        pseudo: "shxytsu",
+        style: "",
+        description: "",
+        reseaux: { instagram: "shxytsu" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/pjBCzRNEbxZzYdxAGe" }
+        ],
+        youtube_id: "K7GWcTzomtQ"
+    },
+    {
+        pseudo: "1ksensei",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1ksensei" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/WmHoH7WDo5rIEYYYR2" }
+        ],
+        youtube_id: "9zRh37ZaWAA"
+    },
+    {
+        pseudo: "13thall_",
+        style: "",
+        description: "",
+        reseaux: { instagram: "13thall_" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/EySikQz61aTDvW43SN" }
+        ],
+        youtube_id: "LSCHZtQCxTE"
+    },
+    {
+        pseudo: "prodkanser",
+        style: "",
+        description: "",
+        reseaux: { instagram: "prodkanser" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/K0WclHR1mCi2odRmx1" }
+        ],
+        youtube_id: "IS0IFeLscEI"
+    },
+    {
+        pseudo: "6pa___",
+        style: "",
+        description: "",
+        reseaux: { instagram: "6pa___" },
+        liens: [],
+        youtube_id: ""
+    },
+    {
+        pseudo: "1prodbytn",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1prodbytn" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/OjtUtDChRZQ1QLyIil" }
+        ],
+        youtube_id: "d8HDwXgA2Yk"
+    },
+    {
+        pseudo: "emcccee",
+        style: "",
+        description: "",
+        reseaux: { instagram: "emcccee" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/2U02R27S7wz1eCWAis" }
+        ],
+        youtube_id: ""
+    },
+    {
+        pseudo: "c4000plug",
+        style: "",
+        description: "",
+        reseaux: { instagram: "c4000" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/HokJGWEeqt32CX9yTx" }
+        ],
+        youtube_id: "UXzv9TvNJ80"
+    },
+    {
+        pseudo: "gustavio_topman",
+        style: "",
+        description: "",
+        reseaux: { instagram: "gustavio_topman" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/hNdkl1hBn6L4JzQm3d" }
+        ],
+        youtube_id: "cA7wcOlnu-o"
+    },
+    {
+        pseudo: "1terror",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1terror" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/Rs1XzJVAZxc4AqV10q" }
+        ],
+        youtube_id: "7aRa25-WJnA"
+    },
+    {
+        pseudo: "bapebrazy",
+        style: "",
+        description: "",
+        reseaux: { instagram: "bapebrazy" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/VwSbg7qKGTPaHLHq8S" }
+        ],
+        youtube_id: "gqBG1R9a68c"
+    },
+    {
+        pseudo: "djcodeienwar",
+        style: "",
+        description: "",
+        reseaux: { instagram: "djcodeienwar" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/SPRsU2Zv9v1bqNn0DM" }
+        ],
+        youtube_id: "8i_gAaa9cAk"
+    },
+    {
+        pseudo: "used2that",
+        style: "",
+        description: "",
+        reseaux: { instagram: "used2that" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/aXPwytyUlnMP5hmZO9" }
+        ],
+        youtube_id: "DqSHnENOxgE"
+    },
+    {
+        pseudo: "T-Roy",
+        style: "",
+        description: "",
+        reseaux: { instagram: "nathanroyt_roy" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/bf3h3pSdIdrumFw6wb" }
+        ],
+        youtube_id: "9MV6ysyi2C4"
+    },
+    {
+        pseudo: "voidd",
+        style: "",
+        description: "",
+        reseaux: { instagram: "1voidd" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/qSWawSTh5gnK844VMj" }
+        ],
+        youtube_id: "v_LRuFz8jFE"
+    },
+    {
+        pseudo: "kamanugue",
+        style: "",
+        description: "",
+        reseaux: { instagram: "kamanugue" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/vnaSqyyk3dg15r8Tyy" }
+        ],
+        youtube_id: "DxWQcbIZPe8"
+    },
+    {
+        pseudo: "vlash4ever",
+        style: "",
+        description: "",
+        reseaux: { instagram: "vlash4ever" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/xdBTfqfONxAJfcAtNU" }
+        ],
+        youtube_id: "lBACTaoyNqU"
+    },
+    {
+        pseudo: "444.jet",
+        style: "",
+        description: "",
+        reseaux: { instagram: "444.jet" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/dP7GW2xIWSqEIcjApJ" }
+        ],
+        youtube_id: "d59mNt2Hmt0"
+    },
+    {
+        pseudo: "cruwiththe2",
+        style: "",
+        description: "",
+        reseaux: { instagram: "cru" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/9V1hvFL8oczuIMv7G6" }
+        ],
+        youtube_id: "p1ntXs67L-Y"
+    },
+    {
+        pseudo: "407krxxk",
+        style: "",
+        description: "",
+        reseaux: { instagram: "407krxxk" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/auJyXGtZ7fGt1eD6D6" }
+        ],
+        youtube_id: "znrkKRVrHuQ"
+    },
+    {
+        pseudo: "louisbrodinski",
+        style: "",
+        description: "",
+        reseaux: { instagram: "louisbrodinski" },
+        liens: [
+            { label: "SoundCloud", url: "https://on.soundcloud.com/coxbsQcmliaZzrSB4o" }
+        ],
+        youtube_id: "xTJopiiskEg"
+    }
 ];
+
 const alaune = [
     {
         titre: "Incurable",
@@ -646,6 +1366,9 @@ contenu.innerHTML = `
     ${sectionDroite}
 </div>
 `;
+    carte.style.width = "1000px";
+    carte.style.height = "auto";
+    carte.style.minHeight = "auto";
     carte.style.display = "block";
     carte.classList.remove("fenetre-visible");
     setTimeout(() => carte.classList.add("fenetre-visible"), 10);
