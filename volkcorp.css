@@ -1170,3 +1170,47 @@ img {
     user-drag: none;
     pointer-events: none;
 }
+
+/* ============================================
+   MODE TÉLÉPHONE — écrans < 768px
+   N'affecte PAS le desktop (tout est dans @media)
+   ============================================ */
+@media (max-width: 768px) {
+
+    /* --- Fenêtres en quasi plein écran, calées, non-draggables --- */
+    .fenetre {
+        width: 54vw !important;
+        height: auto !important;
+        max-height: 88vh !important;
+        top: 6vh !important;
+        left: 3vw !important;
+        resize: none !important;
+    }
+    .fenetre-barre {
+        cursor: default !important;
+    }
+    .fenetre-contenu {
+        max-height: 78vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* --- Bulles un peu plus petites --- */
+    .bulle {
+        width: 62px;
+        height: 62px;
+        font-size: 8px;
+        padding: 6px;
+    }
+
+    /* Barre du haut : réduire et éviter le débordement */
+    #barre-haut, .barre-haut {
+        font-size: 8px !important;
+        padding: 4px 6px !important;
+    }
+    /* Masquer les éléments secondaires qui débordent sur mobile */
+    #date-heure, #chargement-texte {
+        display: none;
+    }
+
+}

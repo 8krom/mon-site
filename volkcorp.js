@@ -121,10 +121,20 @@ const bullesData = [
     { nom: "À la une", lien: "#" },
 ];
 
-const centreX = window.innerWidth / 2;
-const centreY = window.innerHeight / 2;
-const rayon = 250;
-const rayonBulle = 45;
+let centreX, centreY, rayon;
+const rayonBulle = 40;
+
+function calculerDimensions() {
+    centreX = window.innerWidth / 2;
+    centreY = window.innerHeight / 2;
+    // Rayon = proportionnel au plus petit côté de l'écran, borné
+    const base = Math.min(window.innerWidth, window.innerHeight);
+    rayon = Math.max(120, Math.min(base * 0.40, 280));
+}
+calculerDimensions();
+
+// Recalcule si on tourne le téléphone ou redimensionne
+window.addEventListener("resize", calculerDimensions);
 
 const bulles = bullesData.map(function(data, i) {
     const div = document.createElement("div");
