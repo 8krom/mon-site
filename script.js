@@ -99,6 +99,13 @@ btnRetour.addEventListener("click", function() {
 
 const covers = [
     { type: "annee", valeur: "2026" },
+    { fichier: "190sseu_8krom_Jurassic_Trap.png", titre: "Jurassic Trap", categorie: ["photoedit"], lien: "" },
+    { fichier: "leoewski_8krom_Black_Jack.png", titre: "Black Jack", categorie: ["photoedit"], lien: "" },
+    { fichier: "dialryckx_8krom_incurable.png", titre: "Tazmania", categorie: ["photoedit", "dessin"], lien: "" },
+    { fichier: "leoewski_8krom_God_Sent.png", titre: "God Sent", categorie: ["photoedit"], lien: "" },
+    { fichier: "leoewski_8krom_ipad.png", titre: "iPad", categorie: ["photoedit"], lien: "" },
+    { fichier: "Pink_8krom_4.png", titre: "G4llery", categorie: ["photoedit"], lien: "" },
+    { fichier: "dialryckx_8krom_incurable_tracklist.png", titre: "Tazmania", categorie: ["tracklist"], lien: "" },
     { fichier: "Sub_Med_Tape_vol1_8krom2.png", categorie: ["photomontage"], titre: "Sub.Med Tape vol.1" },
     { fichier: "Sober_JackSin_8krom.png", categorie: ["photomontage"], titre: "Sober" },
     { fichier: "panamera_chirurgy_francisjeremy_8krom.png", categorie: ["photomontage"], titre: "Panamera", lien: "https://soundcloud.com/chirurgy-beats/francis-jeremy-panamera-prod?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" },    
