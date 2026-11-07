@@ -1141,7 +1141,8 @@ const alaune = [
 }
 ];
 
-coverartists.forEach(function(artiste) {
+// Construit une pastille d'artiste cliquable
+function creerRefTag(artiste, type) {
     const tag = document.createElement("div");
     tag.classList.add("ref-tag");
     tag.textContent = artiste.pseudo;
@@ -1149,23 +1150,29 @@ coverartists.forEach(function(artiste) {
         sons.clik.currentTime = 0;
         sons.clik.play();
         e.stopPropagation();
-        ouvrirCarteArtiste(artiste, "cover");
+        ouvrirCarteArtiste(artiste, type);
     });
-    document.getElementById("liste-graphistes").appendChild(tag);
-});
+    return tag;
+}
 
-beatmakers.forEach(function(artiste) {
-    const tag = document.createElement("div");
-    tag.classList.add("ref-tag");
-    tag.textContent = artiste.pseudo;
-    tag.addEventListener("click", function(e) {
-        sons.clik.currentTime = 0;
-        sons.clik.play();
-        e.stopPropagation();
-        ouvrirCarteArtiste(artiste, "beatmaker");
-    });
-    document.getElementById("liste-beatmakers").appendChild(tag);
-});
+// Affiche les deux listes. Réutilisable : le code l'appelle avec ses listes
+// par défaut, et Firebase (index.html) peut la rappeler avec le catalogue géré.
+function rendreArtistes(covers, beats) {
+    const listeG = document.getElementById("liste-graphistes");
+    const listeB = document.getElementById("liste-beatmakers");
+    if (!listeG || !listeB) return;
+    listeG.innerHTML = "";
+    listeB.innerHTML = "";
+    (covers || []).forEach(function(a) { listeG.appendChild(creerRefTag(a, "cover")); });
+    (beats || []).forEach(function(a) { listeB.appendChild(creerRefTag(a, "beatmaker")); });
+}
+
+// Affichage par défaut = les listes écrites dans le code (filet de sécurité :
+// si Firebase est vide ou injoignable, l'Almanach reste rempli).
+rendreArtistes(coverartists, beatmakers);
+
+// On expose la fonction pour que Firebase puisse remplacer l'affichage.
+window.rendreArtistes = rendreArtistes;
 
 function ouvrirAlaune() {
     let f = document.getElementById("fenetre-alaune-liste");
