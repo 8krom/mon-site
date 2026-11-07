@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panneau Admin — Volkcorp</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root { --or:#ec911a; --gris:#c0bdb5; }
+  body { background:#1a1a1a; color:#cfcfcf; font-family:'Courier New',monospace; padding:20px; line-height:1.5; }
+  h1 { font-size:18px; letter-spacing:3px; color:var(--or); text-transform:uppercase; }
+  .sous { font-size:12px; color:#888; margin:4px 0 18px; }
+  a { color:var(--or); }
+  button { background:var(--or); color:#1a1a1a; border:none; font-family:inherit; font-weight:bold; font-size:12px;
+           letter-spacing:1px; padding:9px 16px; border-radius:8px; cursor:pointer; text-transform:uppercase; transition:opacity .2s; }
+  button:hover { opacity:.85; }
+  button.sec { background:#383838; color:#cfcfcf; }
+  button.danger { background:#4a2020; color:#ff8080; }
+  button.mini { font-size:11px; padding:5px 10px; border-radius:6px; }
+  input, textarea, select { width:100%; background:#161616; border:1px solid #404040; color:#e0e0e0;
+           font-family:inherit; font-size:13px; padding:8px; border-radius:6px; }
+  input:focus, textarea:focus { outline:none; border-color:var(--or); }
+  label { display:block; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--or); margin:10px 0 4px; }
+
+  /* Connexion */
+  #ecran-login { max-width:420px; margin:60px auto; text-align:center; }
+  #ecran-login button { margin-top:16px; }
+  #msg-login { font-size:12px; color:#ff8080; margin-top:14px; min-height:16px; }
+
+  /* App */
+  #app { display:none; max-width:900px; margin:0 auto; }
+  .barre { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .onglets { display:flex; gap:8px; margin-bottom:16px; }
+  .onglets button { background:#2d2d2d; color:#cfcfcf; border:1px solid #444; }
+  .onglets button.actif { background:var(--or); color:#1a1a1a; border-color:var(--or); }
+  .outils { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center; }
+  #recherche { max-width:260px; }
+  .compte { font-size:12px; color:#888; margin-left:auto; }
+
+  .carte { background:#232323; border:1px solid #383838; border-left:3px solid var(--or); border-radius:8px;
+           padding:12px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; }
+  .carte.cache { opacity:.45; border-left-color:#555; }
+  .carte .nom { font-size:14px; letter-spacing:1px; color:#fff; text-transform:uppercase; flex:1; }
+  .carte .nom small { display:block; text-transform:none; letter-spacing:0; color:#888; font-size:11px; margin-top:2px; }
+  .carte .actions { display:flex; gap:6px; flex-wrap:wrap; }
+  .badge { font-size:10px; padding:2px 7px; border-radius:20px; background:#2d2d2d; color:#888; letter-spacing:1px; }
+  .badge.on { background:#1e3a1e; color:#8fd88f; }
+  .badge.off { background:#3a1e1e; color:#d88f8f; }
+
+  /* Modale édition */
+  #modale { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:100; overflow:auto; padding:30px 16px; }
+  #modale .fenetre { background:#1f1f1f; border:1px solid #444; border-radius:12px; max-width:560px; margin:0 auto; padding:22px; }
+  #modale h2 { font-size:15px; letter-spacing:2px; color:var(--or); text-transform:uppercase; margin-bottom:6px; }
+  .ligne-btn { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .aide { font-size:11px; color:#777; margin-top:2px; }
+  .etat { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:#232323; border:1px solid var(--or);
+          color:var(--or); padding:10px 18px; border-radius:8px; font-size:12px; letter-spacing:1px; opacity:0;
+          transition:opacity .3s; pointer-events:none; z-index:200; }
+  .etat.vu { opacity:1; }
+</style>
+</head>
+<body>
+
+<h1>⚙ Panneau Admin — Volkcorp</h1>
+<p class="sous">Gestion du catalogue de l'Almanach · réservé à 8krom</p>
+
+<!-- CONNEXION -->
+<div id="ecran-login">
+  <p>Connecte-toi avec le compte Google de Volkcorp pour accéder au panneau.</p>
+  <button id="btn-google" onclick="connecterGoogle()">SIGNATURE EXPRESS · GOOGLE</button>
+  <div id="msg-login"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="barre">
+    <div style="font-size:12px;color:#888;">Connecté : <span id="qui"></span></div>
+    <button class="sec mini" onclick="deconnecter()">Déconnexion</button>
+  </div>
+
+  <div class="onglets">
+    <button id="ong-cover" class="actif" onclick="changerOnglet('coverartists')">Cover artists</button>
+    <button id="ong-beat" onclick="changerOnglet('beatmakers')">Beatmakers</button>
+  </div>
+
+  <div class="outils">
+    <button onclick="nouvelleFiche()">+ Ajouter</button>
+    <input id="recherche" placeholder="Rechercher…" oninput="rendre()">
+    <span class="compte" id="compte"></span>
+  </div>
+
+  <div id="liste"></div>
+
+  <div style="margin-top:26px; border-top:1px solid #333; padding-top:16px;">
+    <label>Import initial</label>
+    <p class="aide">À faire UNE seule fois : copie ton catalogue actuel (57 covers + 82 beatmakers) dans Firebase.
+       Si le catalogue en ligne est déjà rempli, ça ne fait rien (sécurité anti-doublon).</p>
+    <div class="ligne-btn">
+      <button class="sec" onclick="importerSeed()">⬇ Importer le catalogue actuel</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE -->
+<div id="modale">
+  <div class="fenetre">
+    <h2 id="modale-titre">Éditer</h2>
+    <input type="hidden" id="f-id">
+    <label>Pseudo *</label>
+    <input id="f-pseudo">
+    <label>Style</label>
+    <input id="f-style">
+    <label>Description</label>
+    <textarea id="f-description" rows="3"></textarea>
+    <label>Instagram (pseudo sans @)</label>
+    <input id="f-instagram">
+    <label>Liens <span class="aide">(un par ligne, format : Label | https://…)</span></label>
+    <textarea id="f-liens" rows="3" placeholder="Portfolio | https://exemple.com"></textarea>
+    <div id="bloc-covers">
+      <label>Covers <span class="aide">(un nom de fichier par ligne, ex: pseudo_1.png)</span></label>
+      <textarea id="f-covers" rows="3"></textarea>
+    </div>
+    <div id="bloc-youtube">
+      <label>ID YouTube <span class="aide">(la partie après watch?v= )</span></label>
+      <input id="f-youtube">
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+      <input type="checkbox" id="f-visible" style="width:auto;"> Visible sur le site
+    </label>
+    <div class="ligne-btn">
+      <button onclick="enregistrerFiche()">💾 Enregistrer</button>
+      <button class="sec" onclick="fermerModale()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div class="etat" id="etat"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { getDatabase, ref, onValue, set, update, remove, push, get } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyARYF5I7nPcqlGFKEPFRQE-yG3K7fQ2iEU",
+  authDomain: "volkcorp-6ff20.firebaseapp.com",
+  databaseURL: "https://volkcorp-6ff20-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "volkcorp-6ff20",
+  storageBucket: "volkcorp-6ff20.firebasestorage.app",
+  messagingSenderId: "180494908582",
+  appId: "1:180494908582:web:7a466a78b829da8a668867"
+};
+
+const ADMIN_UID = "6v6A1I3c3jbPZ59waM3X0HIcprb2";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const rtdb = getDatabase(app);
+
+const SEED = {"coverartists":[{"pseudo":"kanakgotswag","style":"","description":"","instagram":"kanakgotswag","liens":[],"covers":["kanakgotswag_1.png","kanakgotswag_2.png","kanakgotswag_3.png"],"visible":true,"ordre":0},{"pseudo":"savi_ink","style":"","description":"","instagram":"savi_ink","liens":[{"label":"Portfolio","url":"https://saviink.com/"}],"covers":["saviink_1.png","saviink_2.png","saviink_3.png"],"visible":true,"ordre":1},{"pseudo":"snuffcountry","style":"","description":"","instagram":"snuffcountry","liens":[],"covers":["snuffcountry_1.png","snuffcountry_2.png","snuffcountry_3.png"],"visible":true,"ordre":2},{"pseudo":"brokelifephet","style":"","description":"","instagram":"brokelifephet","liens":[],"covers":["brokelife_1.png","brokelife_2.png","brokelife_3.png"],"visible":true,"ordre":3},{"pseudo":"jglowiththeswitch","style":"","description":"","instagram":"jglowiththeswitch","liens":[],"covers":["jglo_1.png","jglo_2.png","jglo_3.png"],"visible":true,"ordre":4},{"pseudo":"timing_santos","style":"","description":"","instagram":"timing_santos","liens":[],"covers":["timingsantos_1.png","timingsantos_2.png","timingsantos_3.png"],"visible":true,"ordre":5},{"pseudo":"roxx1__","style":"","description":"","instagram":"roxx1__","liens":[],"covers":["roxxx_1.png","roxxx_2.png","roxxx_3.png"],"visible":true,"ordre":6},{"pseudo":"editedbytucha","style":"","description":"","instagram":"editedbytucha","liens":[],"covers":["editedbytucha_1.png","editedbytucha_2.png","editedbytucha_3.png"],"visible":true,"ordre":7},{"pseudo":"wasscoast","style":"","description":"","instagram":"wasscoast","liens":[],"covers":["wasscoast_1.png","wasscoast_2.png","wasscoast_3.png"],"visible":true,"ordre":8},{"pseudo":"graffitibg_7","style":"","description":"","instagram":"graffitibg_7","liens":[],"covers":["graffitibg_1.png","graffitibg_2.png","graffitibg_3.png"],"visible":true,"ordre":9},{"pseudo":"nightfall.network","style":"","description":"","instagram":"nightfall.network","liens":[],"covers":["nightfall_1.png","nightfall_2.png","nightfall_3.png"],"visible":true,"ordre":10},{"pseudo":"pun.bizarre.adventure","style":"","description":"","instagram":"pun.bizarre.adventure","liens":[],"covers":["punbizarre_1.png","punbizarre_2.png","punbizarre_3.png"],"visible":true,"ordre":11},{"pseudo":"sergeant_cash_critter","style":"","description":"","instagram":"sergeant_cash_critter","liens":[],"covers":["sergeantcash_1.png","sergeantcash_2.png","sergeantcash_3.png"],"visible":true,"ordre":12},{"pseudo":"killkamau","style":"","description":"","instagram":"killkamau","liens":[],"covers":["killkamau_1.png","killkamau_2.png","killkamau_3.png"],"visible":true,"ordre":13},{"pseudo":"nasuumi","style":"","description":"","instagram":"nasuumi","liens":[],"covers":["nasuumi_1.png","nasuumi_2.png","nasuumi_3.png"],"visible":true,"ordre":14},{"pseudo":"rackzsaggin","style":"","description":"","instagram":"rackzsaggin","liens":[],"covers":["rackzsaggin_1.png","rackzsaggin_2.png","rackzsaggin_3.png"],"visible":true,"ordre":15},{"pseudo":"djforeignmoney","style":"","description":"","instagram":"djforeignmoney","liens":[],"covers":["foreignmoney_1.png","foreignmoney_2.png","foreignmoney_3.png"],"visible":true,"ordre":16},{"pseudo":"mikulasmaster","style":"","description":"","instagram":"mikulasmaster","liens":[],"covers":["mikulasmaster_1.png","mikulasmaster_2.png","mikulasmaster_3.png"],"visible":true,"ordre":17},{"pseudo":"tseytlintseytlin","style":"","description":"","instagram":"tseytlintseytlin","liens":[],"covers":["tseytlin_1.png","tseytlin_2.png","tseytlin_3.png"],"visible":true,"ordre":18},{"pseudo":"louisotd","style":"","description":"","instagram":"louisotd","liens":[],"covers":["louisotd_1.png","louisotd_2.png","louisotd_3.png"],"visible":true,"ordre":19},{"pseudo":"lockedonmelrose","style":"","description":"","instagram":"lockedonmelrose","liens":[],"covers":["lockedonmelrose_1.png","lockedonmelrose_2.png","lockedonmelrose_3.png"],"visible":true,"ordre":20},{"pseudo":"froiddenombre","style":"","description":"","instagram":"froiddenombre","liens":[],"covers":["froid2novembre_1.png","froid2novembre_2.png","froid2novembre_3.png"],"visible":true,"ordre":21},{"pseudo":"artbynobart","style":"","description":"","instagram":"artbynobart","liens":[],"covers":["nobart_1.png","nobart_2.png","nobart_3.png"],"visible":true,"ordre":22},{"pseudo":"p111nk","style":"","description":"","instagram":"p111nk","liens":[],"covers":["p1111nk_1.png","p1111nk_2.png","p1111nk_3.png"],"visible":true,"ordre":23},{"pseudo":"vim.mania","style":"","description":"","instagram":"vim.mania","liens":[],"covers":["vim_mania_1.png","vim_mania_2.png","vim_mania_3.png"],"visible":true,"ordre":24},{"pseudo":"8.8.8.8_8k","style":"","description":"","instagram":"8.8.8.8_8k","liens":[],"covers":["8888_1.png","8888_2.png","8888_3.png"],"visible":true,"ordre":25},{"pseudo":"326moe","style":"","description":"","instagram":"326moe","liens":[],"covers":["326moe_1.png","326moe_2.png","326moe_3.png"],"visible":true,"ordre":26},{"pseudo":"bye.miles","style":"","description":"","instagram":"bye.miles","liens":[],"covers":["byemiles_1.png","byemiles_2.png","byemiles_3.png"],"visible":true,"ordre":27},{"pseudo":"solomgrund","style":"","description":"","instagram":"solomgrund","liens":[],"covers":["solomgrund_1.png","solomgrund_2.png","solomgrund_3.png"],"visible":true,"ordre":28},{"pseudo":"v4mp1ric_","style":"","description":"","instagram":"v4mp1ric_","liens":[],"covers":["v4mp1r1c_1.png","v4mp1r1c_2.png","v4mp1r1c_3.png"],"visible":true,"ordre":29},{"pseudo":"xnigxlnigxl","style":"","description":"","instagram":"xnigxlnigxl","liens":[],"covers":["nxglnxgl_1.png","nxglnxgl_2.png","nxglnxgl_3.png"],"visible":true,"ordre":30},{"pseudo":"beam.portfolio","style":"","description":"","instagram":"beam.portfolio","liens":[],"covers":["beam_1.png","beam_2.png","beam_3.png"],"visible":true,"ordre":31},{"pseudo":"hell.i.ot","style":"","description":"","instagram":"hell.i.ot","liens":[],"covers":["helliot_1.png","helliot_2.png","helliot_3.png"],"visible":true,"ordre":32},{"pseudo":"crtr249","style":"","description":"","instagram":"crtr249","liens":[],"covers":["crtr_249_1.png","crtr_249_2.png","crtr_249_3.png"],"visible":true,"ordre":33},{"pseudo":"myleshcgrady","style":"","description":"","instagram":"myleshcgrady","liens":[],"covers":["mylesmcgrady_1.png","mylesmcgrady_2.png","mylesmcgrady_3.png"],"visible":true,"ordre":34},{"pseudo":"snowinglondon","style":"","description":"","instagram":"snowinglondon","liens":[],"covers":["snowinginglondon_1.png","snowinginglondon_2.png","snowinginglondon_3.png"],"visible":true,"ordre":35},{"pseudo":"borguimo","style":"","description":"","instagram":"borguimo","liens":[],"covers":["borguimo_1.png","borguimo_2.png","borguimo_3.png"],"visible":true,"ordre":36},{"pseudo":"amari_oo","style":"","description":"","instagram":"amari_oo","liens":[],"covers":["amari_1.png","amari_2.png","amari_3.png"],"visible":true,"ordre":37},{"pseudo":"scotttaylor_art","style":"","description":"","instagram":"scotttaylor_art","liens":[],"covers":["scotttaylor_1.png","scotttaylor_2.png","scotttaylor_3.png"],"visible":true,"ordre":38},{"pseudo":"meonni__","style":"","description":"","instagram":"meonni__","liens":[],"covers":["meonni_1.png","meonni_2.png","meonni_3.png"],"visible":true,"ordre":39},{"pseudo":"cincoflare","style":"","description":"","instagram":"cincoflare","liens":[],"covers":["cincoflare_1.png","cincoflare_2.png","cincoflare_3.png"],"visible":true,"ordre":40},{"pseudo":"markusloewe_art","style":"","description":"","instagram":"markusloewe_art","liens":[],"covers":["markus_1.png","markus_2.png","markus_3.png"],"visible":true,"ordre":41},{"pseudo":"feverdrive","style":"","description":"","instagram":"feverdrive","liens":[],"covers":["feverdrive_1.png","feverdrive_2.png","feverdrive_3.png"],"visible":true,"ordre":42},{"pseudo":"spyrvl","style":"","description":"","instagram":"spyrvl","liens":[],"covers":["spyrvl_1.png","spyrvl_2.png","spyrvl_3.png"],"visible":true,"ordre":43},{"pseudo":"gallery_provence","style":"","description":"","instagram":"gallery_provence","liens":[],"covers":["galleryprovence_1.png","galleryprovence_2.png","galleryprovence_3.png"],"visible":true,"ordre":44},{"pseudo":"fritzsito","style":"","description":"","instagram":"fritzsito","liens":[],"covers":["fritzsito_1.png","fritzsito_2.png","fritzsito_3.png"],"visible":true,"ordre":45},{"pseudo":"crocopolo","style":"","description":"","instagram":"crocopolo","liens":[],"covers":["crocopolo_1.png","crocopolo_2.png","crocopolo_3.png"],"visible":true,"ordre":46},{"pseudo":"bleinbleinblein.xyz","style":"","description":"","instagram":"bleinbleinblein.xyz","liens":[],"covers":["blein_1.png","blein_2.png","blein_3.png"],"visible":true,"ordre":47},{"pseudo":"youngpolyanagwap","style":"","description":"","instagram":"youngpolyanagwap","liens":[],"covers":["youngpolyana_1.png","youngpolyana_2.png","youngpolyana_3.png"],"visible":true,"ordre":48},{"pseudo":"rejuz","style":"","description":"","instagram":"rejuz","liens":[],"covers":["rejuz_1.png","rejuz_2.png","rejuz_3.png"],"visible":true,"ordre":49},{"pseudo":"absrdflexxedup","style":"","description":"","instagram":"absrdflexxedup","liens":[],"covers":["absrdflexxedup_1.png","absrdflexxedup_2.png","absrdflexxedup_3.png"],"visible":true,"ordre":50},{"pseudo":"jahvelot","style":"","description":"","instagram":"jahvelot","liens":[],"covers":["jahvelot_1.png","jahvelot_2.png","jahvelot_3.png"],"visible":true,"ordre":51},{"pseudo":"b4kedboy","style":"","description":"","instagram":"b4kedboy","liens":[],"covers":["b4kedboy_1.png","b4kedboy_2.png","b4kedboy_3.png"],"visible":true,"ordre":52},{"pseudo":"plpvp","style":"","description":"","instagram":"plpvp","liens":[],"covers":["plpvp_1.png","plpvp_2.png","plpvp_3.png"],"visible":true,"ordre":53},{"pseudo":"fsm_hollow","style":"","description":"","instagram":"fsm_hollow","liens":[],"covers":["fsmhollow_1.png","fsmhollow_2.png","fsmhollow_3.png"],"visible":true,"ordre":54},{"pseudo":"coltonartt","style":"dessin numérique","description":"","instagram":"coltonartt","liens":[],"covers":["coltonartt_1.png","coltonartt_2.png","coltonartt_3.png"],"visible":true,"ordre":55},{"pseudo":"deejayxen","style":"","description":"","instagram":"deejayxen","liens":[],"covers":["deejayxen_1.png","deejayxen_2.png","deejayxen_3.png"],"visible":true,"ordre":56}],"beatmakers":[{"pseudo":"riversek","style":"crazy bouncy","description":"J'ai découvert grâce à Dialryckx, sur le morceau Marrgiela puis Circus flow m'a fait comprendre que je devais aller voir le profil et je n'est pas était déçu ! J'aime trop ses 808 grasses mélangé à des ambiances céleste vraiment j'adore !","instagram":"riverseksek","liens":[{"label":"YouTube","url":"https://www.youtube.com/@riverseksek/videos"}],"youtube_id":"zyhI5Zhb3rc","visible":true,"ordre":0},{"pseudo":"fillette.318","style":"","description":"","instagram":"fillette.318","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/gOr21QGihbucLOde8e"}],"youtube_id":"6n0DERExFV8","visible":true,"ordre":1},{"pseudo":"prodpmoneee","style":"","description":"","instagram":"prodpmoneee","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/fiELPJUUddlvAZbLvh"}],"youtube_id":"hn7PBvc_3RQ","visible":true,"ordre":2},{"pseudo":"prod.5petsnazgdz","style":"","description":"","instagram":"prod.spetsnazgdz","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/GaKuIUkaB1FkIQ6PKp"}],"youtube_id":"XX_Ckg-PEXs","visible":true,"ordre":3},{"pseudo":"countlittfroy","style":"","description":"","instagram":"countlittfroy","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/pOzRA8sJHzSLpHij0c"}],"youtube_id":"Cls9gpTrBUM","visible":true,"ordre":4},{"pseudo":"yxngwaga","style":"","description":"","instagram":"yxngwaga","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/fqOUTMoYaXjZmMGvsh"}],"youtube_id":"","visible":true,"ordre":5},{"pseudo":"noautospaz","style":"","description":"","instagram":"noautospaz","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/MBklhDSSpL9BI3PkrH"}],"youtube_id":"_5mQyR0vg-w","visible":true,"ordre":6},{"pseudo":"ncxtzxstr1","style":"","description":"","instagram":"ncxtzxstrv","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/C69Lx7WKp2LBuznRZ1"}],"youtube_id":"","visible":true,"ordre":7},{"pseudo":"ninagen","style":"","description":"","instagram":"ninagen","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/HRlhpBVRxjBXZvfbRF"}],"youtube_id":"","visible":true,"ordre":8},{"pseudo":"flatoutflatoutflatout","style":"","description":"","instagram":"flatoutflatoutflatout","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/wD0UQz707q6xsYY6wW"}],"youtube_id":"","visible":true,"ordre":9},{"pseudo":"lonelaflare","style":"","description":"","instagram":"lonelaflare","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/nz52hSiHuKirbg9dhs"}],"youtube_id":"DI9JyJw8Co8","visible":true,"ordre":10},{"pseudo":"whyfiveee","style":"","description":"","instagram":"whyfiveee","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/sl1MhCeYI0lq7UfMoD"}],"youtube_id":"IsDAuiP_0vA","visible":true,"ordre":11},{"pseudo":"prodkip","style":"","description":"","instagram":"prodkip","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/OA2bfEOraOsWAjs0Xn"}],"youtube_id":"YVqzkaJ4d7U","visible":true,"ordre":12},{"pseudo":"gen6","style":"","description":"","instagram":"gen6","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/jBLXONMiyjbzZ9rHaf"}],"youtube_id":"w9n95taBonw","visible":true,"ordre":13},{"pseudo":"chirurgyyy","style":"","description":"","instagram":"chirurgyyy","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/lt2bI9f6qHaz3O0mo8"}],"youtube_id":"21no5DsgQa0","visible":true,"ordre":14},{"pseudo":"1ballonboy","style":"","description":"","instagram":"1ballonboyz","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/muAz2wZirtxS1YLrfB"}],"youtube_id":"GCHJMmvAiAo","visible":true,"ordre":15},{"pseudo":"mercizealest","style":"","description":"","instagram":"mercizealest","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/OnKUFZ9btZdSiSUfhq"}],"youtube_id":"xdytQCOjtMQ","visible":true,"ordre":16},{"pseudo":"esabekayoe","style":"#grotesque","description":"","instagram":"esabekayoe","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/ne4Qs66eGfDVKHtNr4"}],"youtube_id":"aUE2d7c9tX0","visible":true,"ordre":17},{"pseudo":"1yungvalentino","style":"#bringbacktheplugg","description":"","instagram":"1yungvalentino","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/O7ystL0VsEkQ1pBzaT"}],"youtube_id":"","visible":true,"ordre":18},{"pseudo":"slym3typhoon","style":"","description":"","instagram":"slym3typhoon","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/wxkZ97uF739J9nigcT"}],"youtube_id":"ivxXsLPGKEQ","visible":true,"ordre":19},{"pseudo":"blkoloup","style":"","description":"","instagram":"blkoloup","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/M6IJaoSaz8462PYbxP"}],"youtube_id":"tGECwx4h3ro","visible":true,"ordre":20},{"pseudo":"prodjudah","style":"","description":"","instagram":"prodjudah","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/fnQXFfgwrnedAimcu9"}],"youtube_id":"YS_a9hc5Uxs","visible":true,"ordre":21},{"pseudo":"prodwexszn","style":"#plugg #dream","description":"","instagram":"prodwexszn","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/W9FdAP6axt9NpOohNn"}],"youtube_id":"","visible":true,"ordre":22},{"pseudo":"ffolio","style":"","description":"","instagram":"ffolio","liens":[],"youtube_id":"92kEGf-1P6M","visible":true,"ordre":23},{"pseudo":"yannoski_3","style":"","description":"","instagram":"yannoski_3","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/eFUpzrCnoS6cOgsmOv"}],"youtube_id":"wt50TPjw-4o","visible":true,"ordre":24},{"pseudo":"sylvan_dekens","style":"","description":"","instagram":"sylvan_dekens","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/xlDylEtf0jRdWcrlRV"}],"youtube_id":"c67yj-TLRZc","visible":true,"ordre":25},{"pseudo":"perc40","style":"","description":"","instagram":"perc40","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/v8OghOFRBfyzzf92r5"}],"youtube_id":"gdhizEJIXr8","visible":true,"ordre":26},{"pseudo":"yungstxxzy","style":"","description":"","instagram":"yungstxxzy","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/nYYuRm4SB1Hc11UG9p"}],"youtube_id":"F7wimb7WyY4","visible":true,"ordre":27},{"pseudo":"glozula","style":"","description":"","instagram":"glozula","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/amHoqStEvOzKr14nms"}],"youtube_id":"ZxviregNPTg","visible":true,"ordre":28},{"pseudo":"stabneez","style":"","description":"","instagram":"stabneez","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/qZFqDLT9LXU1uZMBX6"}],"youtube_id":"RBiLH9F5zUI","visible":true,"ordre":29},{"pseudo":"itz3g","style":"","description":"","instagram":"itz3g","liens":[],"youtube_id":"4Ini1xH-TGc","visible":true,"ordre":30},{"pseudo":"bricksy2x","style":"","description":"","instagram":"bricksy2x","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/pyzFVlYoWBMftidxGS"}],"youtube_id":"UNdWQveqK7Q","visible":true,"ordre":31},{"pseudo":"medams.mp3","style":"","description":"","instagram":"medams.mp3","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/16cqC74uKnpfAlx0AN"}],"youtube_id":"Ndsa3ZdoJmM","visible":true,"ordre":32},{"pseudo":"nyli2b","style":"","description":"","instagram":"nyli2b","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/XK5QmnIGYyw9rj9L6U"}],"youtube_id":"wF2TtmRiKkE","visible":true,"ordre":33},{"pseudo":"fuckkashemir","style":"","description":"","instagram":"fuckkashemir","liens":[],"youtube_id":"r0w20aHrlCA","visible":true,"ordre":34},{"pseudo":"1percshawty","style":"","description":"","instagram":"1percshawty","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/4RCLlEyAAmxExeqauL"}],"youtube_id":"https://www.youtube.com/live/5DH9Tv0DNjg?si=AbHnx7z6F_XUTBjq","visible":true,"ordre":35},{"pseudo":"_1paymels_","style":"","description":"","instagram":"_1paymels_","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/qPBEFNn4Gyi00xm1ec"}],"youtube_id":"5vQGSZn31Y8","visible":true,"ordre":36},{"pseudo":"milanezie","style":"","description":"","instagram":"milanezie","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/qaELwncT6EBqK5GgIm"}],"youtube_id":"nGycKEMh4M8","visible":true,"ordre":37},{"pseudo":"ttdafool","style":"","description":"","instagram":"ttdafool","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/CQJE4cmlnfhCdZt7BM"}],"youtube_id":"WbK-jbXZRps","visible":true,"ordre":38},{"pseudo":"jus8x","style":"","description":"","instagram":"jus8x","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/3ACLl6GNrBsdR1ywll"}],"youtube_id":"oo-M-CovAxo","visible":true,"ordre":39},{"pseudo":"prod.oxead","style":"","description":"","instagram":"prod.oxead","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/iP1gKiJLGBXMJl8yfD"}],"youtube_id":"BFtIg14tthc","visible":true,"ordre":40},{"pseudo":"xantosbeatz","style":"","description":"","instagram":"xantosbeatz","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/qEEto411oB5mLqxB2j"}],"youtube_id":"d8NzdowM9lE","visible":true,"ordre":41},{"pseudo":"pes020k","style":"","description":"","instagram":"pes020k","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/DqUZFFq0DaeoEPTQ0M"}],"youtube_id":"CCLTZboRPXE","visible":true,"ordre":42},{"pseudo":"_v900_","style":"","description":"","instagram":"_v900_","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/PC5oPv2gH5wMgTwQiz"}],"youtube_id":"wauCALQihos","visible":true,"ordre":43},{"pseudo":"tay20k","style":"","description":"","instagram":"tay20k","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/558YFSNlusC80sDdFn"}],"youtube_id":"9l4tHZO1KXM","visible":true,"ordre":44},{"pseudo":"1deejaysammy","style":"","description":"","instagram":"1deejaysammy","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/FS2WH9mXnTnVFkzyIP"}],"youtube_id":"1_7__HNa2Fk","visible":true,"ordre":45},{"pseudo":"dbglokk","style":"","description":"","instagram":"dbglokk","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/3Mp6uuwubxPYk8mfxF"}],"youtube_id":"LLAvYG-m1Pk","visible":true,"ordre":46},{"pseudo":"mag.nis","style":"","description":"","instagram":"mag.nis","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/NUbDOXxwC57TzxTfPg"}],"youtube_id":"jCbTuAoibFc","visible":true,"ordre":47},{"pseudo":"xemarax","style":"","description":"","instagram":"xemarax","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/jSkXffS9ypp9grxEKB"}],"youtube_id":"_pEg0NaaNVo","visible":true,"ordre":48},{"pseudo":"mh","style":"","description":"","instagram":"mh","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/SQzHhkw8hUWU4YQ4tk"}],"youtube_id":"JOGjyvLTLFo","visible":true,"ordre":49},{"pseudo":"20xx_01","style":"","description":"","instagram":"20xx_01","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/JgE59UHrXXvWuF8g4T"}],"youtube_id":"Lq-nBtQ_S-w","visible":true,"ordre":50},{"pseudo":"leshee___","style":"","description":"","instagram":"leshee___","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/YlmSW8m3jdYj6MHnxR"}],"youtube_id":"","visible":true,"ordre":51},{"pseudo":"aghstt","style":"","description":"","instagram":"aghstt","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/S4LvbJpWU0vp2Xq5Zd"}],"youtube_id":"vna9kGlSEJM","visible":true,"ordre":52},{"pseudo":"sytruzbeats","style":"","description":"","instagram":"sytruzbeats","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/5Ex1Z8PXwthwmWMEXv"}],"youtube_id":"jhZBF61ljiY","visible":true,"ordre":53},{"pseudo":"evilgiane","style":"","description":"","instagram":"evilgiane","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/1JRLrDZshAsIwmKW88"}],"youtube_id":"2dhSDgdt53I","visible":true,"ordre":54},{"pseudo":"stoopidxool","style":"","description":"","instagram":"stoopidxool","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/MS7yBDQtB0i5iPBvk5"}],"youtube_id":"iGg6_v6vEjE","visible":true,"ordre":55},{"pseudo":"lilskamx","style":"","description":"","instagram":"lilskamx","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/h5yTaNlHNifpMTa8IE"}],"youtube_id":"XB8LQhQz0V8","visible":true,"ordre":56},{"pseudo":"gspmain","style":"","description":"","instagram":"gspmain","liens":[],"youtube_id":"","visible":true,"ordre":57},{"pseudo":"cashcache","style":"","description":"","instagram":"cashcache","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/AQCMSoHFh5SttpY0TR"}],"youtube_id":"NgCXRfprzN4","visible":true,"ordre":58},{"pseudo":"sxprano","style":"","description":"","instagram":"sxprano","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/ATkPjGcGtrO6D4VPsL"}],"youtube_id":"oskHE8aqGvE","visible":true,"ordre":59},{"pseudo":"1globalk","style":"","description":"","instagram":"1globalk","liens":[],"youtube_id":"","visible":true,"ordre":60},{"pseudo":"shxytsu","style":"","description":"","instagram":"shxytsu","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/pjBCzRNEbxZzYdxAGe"}],"youtube_id":"K7GWcTzomtQ","visible":true,"ordre":61},{"pseudo":"1ksensei","style":"","description":"","instagram":"1ksensei","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/WmHoH7WDo5rIEYYYR2"}],"youtube_id":"9zRh37ZaWAA","visible":true,"ordre":62},{"pseudo":"13thall_","style":"","description":"","instagram":"13thall_","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/EySikQz61aTDvW43SN"}],"youtube_id":"LSCHZtQCxTE","visible":true,"ordre":63},{"pseudo":"prodkanser","style":"","description":"","instagram":"prodkanser","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/K0WclHR1mCi2odRmx1"}],"youtube_id":"IS0IFeLscEI","visible":true,"ordre":64},{"pseudo":"6pa___","style":"","description":"","instagram":"6pa___","liens":[],"youtube_id":"","visible":true,"ordre":65},{"pseudo":"1prodbytn","style":"","description":"","instagram":"1prodbytn","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/OjtUtDChRZQ1QLyIil"}],"youtube_id":"d8HDwXgA2Yk","visible":true,"ordre":66},{"pseudo":"emcccee","style":"","description":"","instagram":"emcccee","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/2U02R27S7wz1eCWAis"}],"youtube_id":"","visible":true,"ordre":67},{"pseudo":"c4000plug","style":"","description":"","instagram":"c4000","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/HokJGWEeqt32CX9yTx"}],"youtube_id":"UXzv9TvNJ80","visible":true,"ordre":68},{"pseudo":"gustavio_topman","style":"","description":"","instagram":"gustavio_topman","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/hNdkl1hBn6L4JzQm3d"}],"youtube_id":"cA7wcOlnu-o","visible":true,"ordre":69},{"pseudo":"1terror","style":"","description":"","instagram":"1terror","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/Rs1XzJVAZxc4AqV10q"}],"youtube_id":"7aRa25-WJnA","visible":true,"ordre":70},{"pseudo":"bapebrazy","style":"","description":"","instagram":"bapebrazy","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/VwSbg7qKGTPaHLHq8S"}],"youtube_id":"gqBG1R9a68c","visible":true,"ordre":71},{"pseudo":"djcodeienwar","style":"","description":"","instagram":"djcodeienwar","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/SPRsU2Zv9v1bqNn0DM"}],"youtube_id":"8i_gAaa9cAk","visible":true,"ordre":72},{"pseudo":"used2that","style":"","description":"","instagram":"used2that","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/aXPwytyUlnMP5hmZO9"}],"youtube_id":"DqSHnENOxgE","visible":true,"ordre":73},{"pseudo":"T-Roy","style":"","description":"","instagram":"nathanroyt_roy","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/bf3h3pSdIdrumFw6wb"}],"youtube_id":"9MV6ysyi2C4","visible":true,"ordre":74},{"pseudo":"voidd","style":"","description":"","instagram":"1voidd","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/qSWawSTh5gnK844VMj"}],"youtube_id":"v_LRuFz8jFE","visible":true,"ordre":75},{"pseudo":"kamanugue","style":"","description":"","instagram":"kamanugue","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/vnaSqyyk3dg15r8Tyy"}],"youtube_id":"DxWQcbIZPe8","visible":true,"ordre":76},{"pseudo":"vlash4ever","style":"","description":"","instagram":"vlash4ever","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/xdBTfqfONxAJfcAtNU"}],"youtube_id":"lBACTaoyNqU","visible":true,"ordre":77},{"pseudo":"444.jet","style":"","description":"","instagram":"444.jet","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/dP7GW2xIWSqEIcjApJ"}],"youtube_id":"d59mNt2Hmt0","visible":true,"ordre":78},{"pseudo":"cruwiththe2","style":"","description":"","instagram":"cru","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/9V1hvFL8oczuIMv7G6"}],"youtube_id":"p1ntXs67L-Y","visible":true,"ordre":79},{"pseudo":"407krxxk","style":"","description":"","instagram":"407krxxk","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/auJyXGtZ7fGt1eD6D6"}],"youtube_id":"znrkKRVrHuQ","visible":true,"ordre":80},{"pseudo":"louisbrodinski","style":"","description":"","instagram":"louisbrodinski","liens":[{"label":"SoundCloud","url":"https://on.soundcloud.com/coxbsQcmliaZzrSB4o"}],"youtube_id":"xTJopiiskEg","visible":true,"ordre":81}]};
+
+let ongletActif = "coverartists";
+let donnees = { coverartists:{}, beatmakers:{} };
+
+// ---------- Connexion ----------
+window.connecterGoogle = function(){
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider).catch(e => {
+    document.getElementById("msg-login").textContent = "Erreur : " + e.message;
+  });
+};
+window.deconnecter = function(){ signOut(auth); };
+
+onAuthStateChanged(auth, (user) => {
+  const login = document.getElementById("ecran-login");
+  const appEl = document.getElementById("app");
+  if (!user) {
+    login.style.display = "block"; appEl.style.display = "none"; return;
+  }
+  if (user.uid !== ADMIN_UID) {
+    login.style.display = "block"; appEl.style.display = "none";
+    document.getElementById("msg-login").textContent = "Accès refusé — ce compte n'est pas l'admin.";
+    signOut(auth);
+    return;
+  }
+  login.style.display = "none"; appEl.style.display = "block";
+  document.getElementById("qui").textContent = user.email || user.uid;
+  ecouter();
+});
+
+// ---------- Lecture temps réel ----------
+function ecouter(){
+  ["coverartists","beatmakers"].forEach(cat => {
+    onValue(ref(rtdb, "catalogue/"+cat), snap => {
+      donnees[cat] = snap.val() || {};
+      rendre();
+    });
+  });
+}
+
+// ---------- Affichage liste ----------
+window.changerOnglet = function(cat){
+  ongletActif = cat;
+  document.getElementById("ong-cover").classList.toggle("actif", cat==="coverartists");
+  document.getElementById("ong-beat").classList.toggle("actif", cat==="beatmakers");
+  document.getElementById("recherche").value = "";
+  rendre();
+};
+
+window.rendre = function(){
+  const cat = ongletActif;
+  const obj = donnees[cat] || {};
+  const q = (document.getElementById("recherche").value || "").toLowerCase();
+  const liste = document.getElementById("liste");
+  const entrees = Object.entries(obj)
+    .map(([id,v]) => ({ id, ...v }))
+    .filter(a => !q || (a.pseudo||"").toLowerCase().includes(q) || (a.style||"").toLowerCase().includes(q))
+    .sort((a,b) => (a.ordre||0) - (b.ordre||0));
+
+  const visibles = Object.values(obj).filter(a => a.visible !== false).length;
+  document.getElementById("compte").textContent = Object.keys(obj).length + " fiches · " + visibles + " visibles";
+
+  if (!entrees.length) {
+    liste.innerHTML = '<p style="color:#777;font-size:13px;padding:14px 0;">Aucune fiche. Clique sur « Importer le catalogue actuel » en bas, ou « + Ajouter ».</p>';
+    return;
+  }
+  liste.innerHTML = entrees.map(a => {
+    const vis = a.visible !== false;
+    return '<div class="carte ' + (vis?'':'cache') + '">' +
+      '<div class="nom">' + echapper(a.pseudo||"(sans nom)") +
+        (a.style ? '<small>' + echapper(a.style) + '</small>' : '') + '</div>' +
+      '<span class="badge ' + (vis?'on':'off') + '">' + (vis?'visible':'caché') + '</span>' +
+      '<div class="actions">' +
+        '<button class="mini sec" onclick="basculer(\'' + a.id + '\')">' + (vis?'👁 Cacher':'👁 Afficher') + '</button>' +
+        '<button class="mini" onclick="editerFiche(\'' + a.id + '\')">✎ Éditer</button>' +
+        '<button class="mini danger" onclick="supprimerFiche(\'' + a.id + '\',\'' + echapper(a.pseudo||'') + '\')">✕</button>' +
+      '</div></div>';
+  }).join("");
+};
+
+function echapper(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;'); }
+
+// ---------- Actions ----------
+window.basculer = function(id){
+  const a = donnees[ongletActif][id];
+  const nv = !(a.visible !== false); // inverse l'état actuel
+  update(ref(rtdb, "catalogue/"+ongletActif+"/"+id), { visible: nv })
+    .then(() => toast(nv ? "Affiché ✓" : "Caché ✓"))
+    .catch(e => toast("Erreur : "+e.message));
+};
+
+window.supprimerFiche = function(id, nom){
+  if (!confirm('Supprimer définitivement « ' + nom + ' » ?\n(Pour juste le retirer du site sans le perdre, utilise plutôt « Cacher ».)')) return;
+  remove(ref(rtdb, "catalogue/"+ongletActif+"/"+id))
+    .then(() => toast("Supprimé ✓"))
+    .catch(e => toast("Erreur : "+e.message));
+};
+
+window.nouvelleFiche = function(){ ouvrirModale(null); };
+window.editerFiche = function(id){ ouvrirModale(id); };
+
+function ouvrirModale(id){
+  const estBeat = ongletActif === "beatmakers";
+  document.getElementById("bloc-covers").style.display = estBeat ? "none" : "block";
+  document.getElementById("bloc-youtube").style.display = estBeat ? "block" : "none";
+  const a = id ? donnees[ongletActif][id] : null;
+  document.getElementById("modale-titre").textContent = id ? "Éditer la fiche" : "Nouvelle fiche";
+  document.getElementById("f-id").value = id || "";
+  document.getElementById("f-pseudo").value = a ? (a.pseudo||"") : "";
+  document.getElementById("f-style").value = a ? (a.style||"") : "";
+  document.getElementById("f-description").value = a ? (a.description||"") : "";
+  document.getElementById("f-instagram").value = a ? (a.instagram||"") : "";
+  document.getElementById("f-liens").value = a && a.liens ? a.liens.map(l => (l.label||"") + " | " + (l.url||"")).join("\n") : "";
+  document.getElementById("f-covers").value = a && a.covers ? a.covers.join("\n") : "";
+  document.getElementById("f-youtube").value = a ? (a.youtube_id||"") : "";
+  document.getElementById("f-visible").checked = a ? (a.visible !== false) : true;
+  document.getElementById("modale").style.display = "block";
+}
+window.fermerModale = function(){ document.getElementById("modale").style.display = "none"; };
+
+window.enregistrerFiche = function(){
+  const cat = ongletActif;
+  const id = document.getElementById("f-id").value;
+  const pseudo = document.getElementById("f-pseudo").value.trim();
+  if (!pseudo) { alert("Le pseudo est obligatoire."); return; }
+
+  const liens = document.getElementById("f-liens").value.split("\n")
+    .map(l => l.trim()).filter(Boolean)
+    .map(l => { const p = l.split("|"); return { label:(p[0]||"").trim(), url:(p[1]||"").trim() }; })
+    .filter(l => l.url);
+
+  const fiche = {
+    pseudo, style: document.getElementById("f-style").value.trim(),
+    description: document.getElementById("f-description").value.trim(),
+    instagram: document.getElementById("f-instagram").value.trim().replace(/^@/,""),
+    liens, visible: document.getElementById("f-visible").checked
+  };
+  if (cat === "beatmakers") fiche.youtube_id = document.getElementById("f-youtube").value.trim();
+  else fiche.covers = document.getElementById("f-covers").value.split("\n").map(c => c.trim()).filter(Boolean);
+
+  let p;
+  if (id) {
+    fiche.ordre = (donnees[cat][id] && donnees[cat][id].ordre) || 0;
+    p = set(ref(rtdb, "catalogue/"+cat+"/"+id), fiche);
+  } else {
+    const max = Math.max(0, ...Object.values(donnees[cat]).map(a => a.ordre||0));
+    fiche.ordre = max + 1;
+    p = set(push(ref(rtdb, "catalogue/"+cat)), fiche);
+  }
+  p.then(() => { fermerModale(); toast(id ? "Modifié ✓" : "Ajouté ✓"); })
+   .catch(e => toast("Erreur : "+e.message));
+};
+
+// ---------- Import initial ----------
+window.importerSeed = async function(){
+  try {
+    const snap = await get(ref(rtdb, "catalogue"));
+    if (snap.exists()) {
+      const v = snap.val();
+      const n = (v.coverartists?Object.keys(v.coverartists).length:0) + (v.beatmakers?Object.keys(v.beatmakers).length:0);
+      if (n > 0 && !confirm("Le catalogue en ligne contient déjà " + n + " fiches.\nImporter quand même (ça ajoutera des doublons) ?")) return;
+    }
+    const maj = {};
+    ["coverartists","beatmakers"].forEach(cat => {
+      (SEED[cat]||[]).forEach(a => {
+        const id = push(ref(rtdb, "catalogue/"+cat)).key;
+        maj["catalogue/"+cat+"/"+id] = a;
+      });
+    });
+    await update(ref(rtdb), maj);
+    toast("Catalogue importé ✓");
+  } catch(e) { toast("Erreur : "+e.message); alert(e.message); }
+};
+
+// ---------- Toast ----------
+function toast(txt){
+  const el = document.getElementById("etat");
+  el.textContent = txt; el.classList.add("vu");
+  clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("vu"), 2200);
+}
+</script>
+</body>
+</html>
