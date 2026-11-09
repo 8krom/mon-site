@@ -1274,9 +1274,9 @@ function demarrerCarnet(f) {
         height: 424,
         size: "stretch",
         minWidth: 220,
-        maxWidth: 300,
+        maxWidth: 800,
         minHeight: 311,
-        maxHeight: 424,
+        maxHeight: 1131,
         showCover: true,
         maxShadowOpacity: 0.4,
         mobileScrollSupport: false,
@@ -1298,8 +1298,24 @@ function demarrerCarnet(f) {
     });
     majInfos(0);
 
+    // Quand on agrandit la fenêtre (coin en bas à droite), le livre et les textes suivent
+    if (window.ResizeObserver) {
+        new ResizeObserver(function() { ajusterCarnet(f); }).observe(f);
+    }
+
     f.querySelector("#carnet-prec").addEventListener("click", function() { carnetFlip.flipPrev(); });
     f.querySelector("#carnet-suiv").addEventListener("click", function() { carnetFlip.flipNext(); });
+}
+
+// Échelle du carnet : 1 = taille de base (fenêtre de 660px de large).
+// Tout ce qui est dans la fenêtre (boutons, compteur, couverture) se cale dessus.
+const CARNET_LARGEUR_BASE = 660;
+function ajusterCarnet(f) {
+    if (f.style.display === "none" || f.offsetWidth === f._carnetLargeur) return;
+    f._carnetLargeur = f.offsetWidth;
+    const k = Math.max(1, f.offsetWidth / CARNET_LARGEUR_BASE);
+    f.style.setProperty("--carnet-k", k.toFixed(3));
+    if (carnetFlip) carnetFlip.update();
 }
 
 function ouvrirCarnet() {
@@ -1308,9 +1324,9 @@ function ouvrirCarnet() {
         f = document.createElement("div");
         f.id = "fenetre-carnet";
         f.classList.add("fenetre");
-        f.style.width = "660px";
-        f.style.left = Math.max(10, (window.innerWidth - 660) / 2) + "px";
-        f.style.top = "60px";
+        f.style.width = CARNET_LARGEUR_BASE + "px";
+        f.style.left = Math.max(10, (window.innerWidth - CARNET_LARGEUR_BASE) / 2) + "px";
+        f.style.top = "40px";
         f.innerHTML = `
             <div class="fenetre-barre" id="barre-carnet">
                 <span class="fenetre-titre">Carnet — 8krom</span>
@@ -1345,6 +1361,8 @@ function ouvrirCarnet() {
     f.style.display = "block";
     f.classList.remove("fenetre-visible");
     setTimeout(() => f.classList.add("fenetre-visible"), 10);
+
+    ajusterCarnet(f);
 
     // La librairie n'est chargée qu'à la première ouverture, et le livre est créé
     // une fois la fenêtre visible (sinon il calcule ses dimensions sur du vide).
