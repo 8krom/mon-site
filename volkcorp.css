@@ -1171,6 +1171,24 @@ img {
     pointer-events: none;
 }
 
+/* ===== CARNET DE CROQUIS ===== */
+#fenetre-carnet { min-height: 0; resize: none; }
+#carnet-contenu { gap: 12px; max-height: none; padding: 14px; background: #7d7d7d; }
+#carnet-scene { display: flex; justify-content: center; align-items: center; min-height: 200px; }
+#carnet-livre { width: 100%; }
+.carnet-chargement { font-family: 'Courier New', monospace; font-size: 12px; color: #1f2020; text-align: center; padding: 80px 0; }
+.carnet-page { background: #eae6e7; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25); }
+.carnet-page img { width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-drag: none; }
+.carnet-couverture { background: #2b2b2b; color: #ec911a; font-family: 'Courier New', monospace; text-align: center; }
+.carnet-couv-titre { font-size: 26px; letter-spacing: 6px; margin-top: 42%; }
+.carnet-couv-sous { font-size: 12px; letter-spacing: 3px; margin-top: 8px; }
+.carnet-couv-note { font-size: 10px; letter-spacing: 2px; color: #a0a0a0; margin-top: 24px; text-transform: uppercase; }
+.carnet-dos .carnet-couv-sous { margin-top: 120%; }
+#carnet-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+#carnet-infos { display: flex; flex-direction: column; align-items: center; font-family: 'Courier New', monospace; color: #1f2020; min-height: 30px; justify-content: center; }
+#carnet-compteur { font-size: 11px; letter-spacing: 2px; }
+#carnet-legende { font-size: 10px; letter-spacing: 1px; color: #3a3a3a; text-transform: uppercase; }
+
 /* ============================================
    MODE TÉLÉPHONE — écrans < 768px
    N'affecte PAS le desktop (tout est dans @media)
@@ -1188,6 +1206,9 @@ img {
     }
     .fenetre-barre {
         cursor: default !important;
+    }
+    #fenetre-carnet {
+        width: 94vw !important;
     }
     .fenetre-contenu {
         max-height: 78vh;

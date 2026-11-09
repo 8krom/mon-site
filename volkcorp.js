@@ -119,6 +119,7 @@ const bullesData = [
     { nom: "Lecoachhh", lien: "#" },
     { nom: "Almanach", lien: "#" },
     { nom: "À la une", lien: "#" },
+    { nom: "Carnet", lien: "#" },
 ];
 
 let centreX, centreY, rayon;
@@ -144,6 +145,7 @@ const bulles = bullesData.map(function(data, i) {
     if (data.nom === "Almanach") aide = "Découvre les cover artists et beatmakers du collectif";
     if (data.nom === "Chatbox") aide = "Le chat général Volkcorp ! — connecte-toi pour discuter";
     if (data.nom === "À la une") aide = "Les projets et sorties mis en avant par le collectif";
+    if (data.nom === "Carnet") aide = "Feuillette le carnet de croquis de 8krom";
     div.setAttribute("data-aide", aide);
     div.addEventListener("mouseenter", function() {
     const hoverSon = sons.hover[Math.floor(Math.random() * 4)];
@@ -163,6 +165,8 @@ const bulles = bullesData.map(function(data, i) {
             setTimeout(() => fp.classList.add("fenetre-visible"), 10);
         } else if (data.nom === "À la une") {
             ouvrirAlaune();
+        } else if (data.nom === "Carnet") {
+            ouvrirCarnet();
         } else if (data.nom === "Chatbox") {
             ouvrirChat();
         } else if (membres[data.nom]) {
@@ -1224,6 +1228,138 @@ function ouvrirAlaune() {
     f.style.display = "block";
     f.classList.remove("fenetre-visible");
     setTimeout(() => f.classList.add("fenetre-visible"), 10);
+}
+
+// ===== CARNET DE CROQUIS (flipbook StPageFlip) =====
+// Pour ajouter une page : dépose l'image dans images/carnet/ et ajoute une ligne ici.
+// Garde un nombre PAIR de pages pour que la couverture de fin se ferme bien.
+const carnetPages = [
+    { image: "page-01.webp", legende: "Le Coachhh" },
+    { image: "page-02.webp", legende: "Liberty City — lettrage" },
+    { image: "page-03.webp", legende: "" },
+    { image: "page-04.webp", legende: "" },
+    { image: "page-05.webp", legende: "Port Coton" },
+    { image: "page-06.webp", legende: "" },
+    { image: "page-07.webp", legende: "Snot Quest — UI" },
+    { image: "page-08.webp", legende: "Snot Quest — UI" },
+    { image: "page-09.webp", legende: "" },
+    { image: "page-10.webp", legende: "" },
+    { image: "page-11.webp", legende: "" },
+    { image: "page-12.webp", legende: "" },
+    { image: "page-13.webp", legende: "" },
+    { image: "page-14.webp", legende: "" },
+    { image: "page-15.webp", legende: "" },
+    { image: "page-16.webp", legende: "" },
+];
+
+let carnetFlip = null;
+let carnetScriptCharge = false;
+
+function demarrerCarnet(f) {
+    const livre = f.querySelector("#carnet-livre");
+    const compteur = f.querySelector("#carnet-compteur");
+    const legende = f.querySelector("#carnet-legende");
+    const total = carnetPages.length;
+
+    // Couverture + pages + dos
+    let html = '<div class="carnet-page carnet-couverture" data-density="hard"><div class="carnet-couv-titre">CARNET</div><div class="carnet-couv-sous">// 8KROM //</div><div class="carnet-couv-note">croquis et brouillons</div></div>';
+    carnetPages.forEach(function(p, i) {
+        html += '<div class="carnet-page"><img src="images/carnet/' + p.image + '" alt="Croquis ' + (i + 1) + '" draggable="false"></div>';
+    });
+    html += '<div class="carnet-page carnet-couverture carnet-dos" data-density="hard"><div class="carnet-couv-sous">VOLKCORP</div></div>';
+    livre.innerHTML = html;
+
+    carnetFlip = new St.PageFlip(livre, {
+        width: 300,
+        height: 424,
+        size: "stretch",
+        minWidth: 220,
+        maxWidth: 300,
+        minHeight: 311,
+        maxHeight: 424,
+        showCover: true,
+        maxShadowOpacity: 0.4,
+        mobileScrollSupport: false,
+        flippingTime: 800
+    });
+    carnetFlip.loadFromHTML(livre.querySelectorAll(".carnet-page"));
+
+    function majInfos(index) {
+        // index 0 = couverture, 1..total = croquis, total+1 = dos
+        if (index <= 0) { compteur.textContent = "couverture"; legende.textContent = ""; return; }
+        if (index > total) { compteur.textContent = "fin"; legende.textContent = ""; return; }
+        compteur.textContent = index + " / " + total;
+        legende.textContent = carnetPages[index - 1].legende || "";
+    }
+    carnetFlip.on("flip", function(e) {
+        sons.clik.currentTime = 0;
+        sons.clik.play();
+        majInfos(e.data);
+    });
+    majInfos(0);
+
+    f.querySelector("#carnet-prec").addEventListener("click", function() { carnetFlip.flipPrev(); });
+    f.querySelector("#carnet-suiv").addEventListener("click", function() { carnetFlip.flipNext(); });
+}
+
+function ouvrirCarnet() {
+    let f = document.getElementById("fenetre-carnet");
+    if (!f) {
+        f = document.createElement("div");
+        f.id = "fenetre-carnet";
+        f.classList.add("fenetre");
+        f.style.width = "660px";
+        f.style.left = Math.max(10, (window.innerWidth - 660) / 2) + "px";
+        f.style.top = "60px";
+        f.innerHTML = `
+            <div class="fenetre-barre" id="barre-carnet">
+                <span class="fenetre-titre">Carnet — 8krom</span>
+                <div class="fenetre-controls">
+                    <button class="fenetre-fermer-carnet">✕</button>
+                </div>
+            </div>
+            <div class="fenetre-contenu" id="carnet-contenu">
+                <div id="carnet-scene"><div id="carnet-livre"><p class="carnet-chargement">Ouverture du carnet…</p></div></div>
+                <div id="carnet-nav">
+                    <button class="btn-volk" id="carnet-prec">◄ préc.</button>
+                    <div id="carnet-infos"><span id="carnet-compteur"></span><span id="carnet-legende"></span></div>
+                    <button class="btn-volk" id="carnet-suiv">suiv. ►</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(f);
+
+        f.querySelector(".fenetre-fermer-carnet").addEventListener("click", function() {
+            sons.retour.currentTime = 0;
+            sons.retour.play();
+            f.style.display = "none";
+        });
+
+        const barre = f.querySelector("#barre-carnet");
+        let drag = false, sx, sy, sl, st;
+        barre.addEventListener("mousedown", function(e) { drag = true; sx = e.clientX; sy = e.clientY; sl = f.offsetLeft; st = f.offsetTop; });
+        document.addEventListener("mousemove", function(e) { if (!drag) return; f.style.left = (sl + e.clientX - sx) + "px"; f.style.top = (st + e.clientY - sy) + "px"; });
+        document.addEventListener("mouseup", function() { drag = false; });
+    }
+
+    f.style.display = "block";
+    f.classList.remove("fenetre-visible");
+    setTimeout(() => f.classList.add("fenetre-visible"), 10);
+
+    // La librairie n'est chargée qu'à la première ouverture, et le livre est créé
+    // une fois la fenêtre visible (sinon il calcule ses dimensions sur du vide).
+    if (carnetFlip) return;
+    if (window.St && window.St.PageFlip) { demarrerCarnet(f); return; }
+    if (carnetScriptCharge) return;
+    carnetScriptCharge = true;
+    const script = document.createElement("script");
+    script.src = "page-flip.browser.js";
+    script.onload = function() { demarrerCarnet(f); };
+    script.onerror = function() {
+        carnetScriptCharge = false;
+        f.querySelector(".carnet-chargement").textContent = "Impossible d'ouvrir le carnet. Recharge la page.";
+    };
+    document.head.appendChild(script);
 }
 
 document.querySelectorAll(".ref-header").forEach(function(header) {
